@@ -13,7 +13,7 @@ function SignIn() {
             setError("Veuillez remplir tous les champs !");
         } else {
             setError("");
-            alert("Connexion réussie ✅ (intégration backend à venir)");
+            alert("Connexion réussie  (intégration backend à venir)");
         }
     };
 
