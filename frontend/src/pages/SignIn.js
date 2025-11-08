@@ -44,7 +44,7 @@ function SignIn() {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       // Redirect to dashboard or home page (you can change the route)
-      setTimeout(() => navigate("/dashboard"), 1500);
+      setTimeout(() => navigate("/profile"), 1500);
 
     } catch (err) {
       console.error("Erreur de connexion :", err);
