@@ -185,6 +185,62 @@ res.status(200).json({
   }
 });
 
+
+
+//get your profile
+app.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT id, name, email, address, phone_number, city FROM users WHERE id = $1',
+      [req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const user = result.rows[0];
+
+    // map DB fields to frontend expected structure
+    res.json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone_number,
+        address: user.address,
+        city: user.city,
+        language: 'English' // placeholder, since not in DB
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error while fetching profile' });
+  }
+});
+
+
+//update your profile
+app.put('/me/update', authenticateToken, async (req, res) => {
+  const { name, email, phone_number, address, city } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE users
+       SET name = $1, email = $2, phone_number = $3, address = $4, city = $5
+       WHERE id = $6`,
+      [name, email, phone_number, address, city, req.user.id]
+    );
+
+    res.json({ message: 'Profile updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error while updating profile' });
+  }
+});
+
+
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
