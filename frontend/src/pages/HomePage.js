@@ -1,6 +1,6 @@
 import React from "react";
 import "./HomePage.css";
-import doctorBg from "../assets/doctor-bg.jpg"; // 🔹 place your image in src/assets/
+import doctorBg from "../assets/doctor-bg.jpg";
 
 function HomePage() {
   return (
