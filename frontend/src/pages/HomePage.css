@@ -54,9 +54,9 @@
   background: rgba(0, 0, 70, 0.7);
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  align-items: center;      /* vertically center content */
+  justify-content: flex-start; /* push content to the left horizontally */
+  text-align: left;
   padding: 0 2rem;
 }
 
@@ -106,4 +106,43 @@
 .btn.secondary:hover {
   background-color: #fff;
   color: #0066cc;
+}
+/* --- Schedule Section --- */
+.schedule-section {
+  background-color: #ffffff;
+  padding: 80px 10%;
+}
+
+.schedule-cards {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.schedule-card {
+  background-color: #dbeafe;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.15);
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+}
+
+.schedule-card h3 {
+  font-size: 1.5rem;
+  color: #1e3a8a;
+  margin-bottom: 20px;
+}
+
+.schedule-card ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.schedule-card li {
+  font-size: 1rem;
+  color: #334155;
+  margin-bottom: 10px;
 }

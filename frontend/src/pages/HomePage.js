@@ -1,4 +1,3 @@
-
 import React from "react";
 import "./HomePage.css";
 import doctorBg from "../doctor-bg.jpg";
@@ -15,7 +14,6 @@ function HomePage() {
         <ul className="nav-links">
           <li><a href="#">Home</a></li>
           <li><a href="#">About Us</a></li>
-          <li><a href="#">Services</a></li>
           <li><a href="#">Profile</a></li>
           <li><a href="#">Contact</a></li>
         </ul>
@@ -38,6 +36,31 @@ function HomePage() {
               <button className="btn primary">Book an Appointment</button>
               <button className="btn secondary">Call Now</button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Schedule Section */}
+      <section className="schedule-section">
+        <div className="schedule-cards">
+          {/* Working Hours */}
+          <div className="schedule-card">
+            <h3>Working Hours</h3>
+            <ul>
+              <li>Monday – Friday: 08:00 – 18:00</li>
+              <li>Saturday: 09:00 – 14:00</li>
+              <li>Sunday: Closed</li>
+            </ul>
+          </div>
+
+          {/* Appointments History */}
+          <div className="schedule-card">
+            <h3>Appointments History</h3>
+            <ul>
+              <li>✔️ 12 Sept 2025 – Completed</li>
+              <li>✔️ 20 Oct 2025 – Completed</li>
+              <li>🕓 10 Nov 2025 – Upcoming</li>
+            </ul>
           </div>
         </div>
       </section>

@@ -1,85 +1,112 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "./auth.css";
+import React from "react";
 
-function SignUp() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [city, setCity] = useState("");
-  const [phone_number, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!name || !email || !password || !city || !phone_number || !address) {
-      setError("Veuillez remplir tous les champs !");
-      return;
-    }
-
-    setError("");
-    setSuccess("");
-
-    try {
-      const response = await fetch("http://localhost:8000/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          city,
-          phone_number,
-          address,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || "Une erreur est survenue.");
-      } else {
-        setSuccess("Compte créé avec succès ✅");
-        setName("");
-        setEmail("");
-        setPassword("");
-        setCity("");
-        setPhoneNumber("");
-        setAddress("");
-      }
-    } catch (err) {
-      setError("Erreur de connexion au serveur.");
-    }
-  };
-
+const SignupPage = () => {
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2 className="auth-title">🩺 DoctorPlus</h2>
-        <p className="auth-subtitle">Créer un nouveau compte</p>
-        <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="Nom complet" value={name} onChange={(e) => setName(e.target.value)} />
-          <input type="email" placeholder="Adresse email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <input type="text" placeholder="Ville" value={city} onChange={(e) => setCity(e.target.value)} />
-          <input type="text" placeholder="Numéro de téléphone" value={phone_number} onChange={(e) => setPhoneNumber(e.target.value)} />
-          <input type="text" placeholder="Adresse" value={address} onChange={(e) => setAddress(e.target.value)} />
-
-          {error && <p className="error-text">{error}</p>}
-          {success && <p className="success-text">{success}</p>}
-
-          <button type="submit">S'inscrire</button>
-        </form>
-
-        <p className="switch-text">
-          Déjà inscrit ? <Link to="/">Se connecter</Link>
+    <div className="flex h-screen">
+      {/* LEFT SIDE - IMAGE + TEXT */}
+      <div
+        className="w-1/2 bg-cover bg-center flex flex-col justify-center px-20 text-white"
+        style={{
+          backgroundImage:
+            "url('/images/your-image.jpg')", // 👈 Replace with your own image path
+          backgroundColor: "rgba(0, 0, 128, 0.6)",
+          backgroundBlendMode: "overlay",
+        }}
+      >
+        <h1 className="text-6xl font-bold mb-6">Hello World.</h1>
+        <p className="text-lg leading-relaxed">
+          <strong>Reserve Your Appointment</strong>
+          <br />
+          Secure your visit with Dr. [Name] in just a few moments.
         </p>
+      </div>
+
+      {/* RIGHT SIDE - FORM */}
+      <div className="w-1/2 flex items-center justify-center bg-white p-12">
+        <div className="w-full max-w-md">
+          <h2 className="text-3xl font-semibold text-gray-800 mb-6">Register</h2>
+          <p className="text-sm text-gray-500 mb-8">
+            Talk to a physician day or night, no matter where you are.{" "}
+            <a href="#" className="text-blue-500 hover:underline">
+              Help your sick child get better, quicker.
+            </a>
+          </p>
+          <form className="space-y-4">
+            <div className="flex gap-4">
+              <input
+                type="text"
+                placeholder="First Name"
+                className="border p-3 rounded w-1/2"
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                className="border p-3 rounded w-1/2"
+              />
+            </div>
+            <input
+              type="date"
+              placeholder="Birth date"
+              className="border p-3 rounded w-full"
+            />
+            <input
+              type="text"
+              placeholder="Street Address"
+              className="border p-3 rounded w-full"
+            />
+            <div className="flex gap-4">
+              <input
+                type="text"
+                placeholder="City"
+                className="border p-3 rounded w-1/2"
+              />
+              <input
+                type="text"
+                placeholder="State"
+                className="border p-3 rounded w-1/2"
+              />
+            </div>
+            <input
+              type="text"
+              placeholder="Zip Code"
+              className="border p-3 rounded w-full"
+            />
+            <input
+              type="text"
+              placeholder="Credit Card #"
+              className="border p-3 rounded w-full"
+            />
+            <div className="flex gap-4">
+              <input
+                type="text"
+                placeholder="CCV"
+                className="border p-3 rounded w-1/2"
+              />
+              <input
+                type="text"
+                placeholder="Expiration Date"
+                className="border p-3 rounded w-1/2"
+              />
+            </div>
+
+            <div className="flex items-center mt-2">
+              <input type="checkbox" className="mr-2" />
+              <label className="text-sm text-gray-600">
+                I accept terms and conditions & privacy policy
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-full font-semibold"
+            >
+              SUBSCRIBE
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
-}
+};
 
-export default SignUp;
+export default SignupPage;
