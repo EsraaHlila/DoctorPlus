@@ -1,0 +1,67 @@
+.error-signin-container {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(
+      rgba(0, 60, 150, 0.6),
+      rgba(0, 60, 150, 0.6)
+    ),
+    url("../assets/doctor-bg.jpg") center/cover no-repeat;
+  /* 🔁 FIX PATH BELOW if needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.error-signin-card {
+  background: #ffffff;
+  padding: 50px 60px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+}
+
+.error-signin-card h1 {
+  color: #003366;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.error-signin-card p {
+  color: #444;
+  font-size: 1.05rem;
+  margin-bottom: 30px;
+}
+
+.signin-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.signin-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .error-signin-card {
+    padding: 35px 25px;
+  }
+
+  .error-signin-card h1 {
+    font-size: 1.6rem;
+  }
+
+  .signin-btn {
+    width: 100%;
+  }
+}

@@ -1,199 +1,252 @@
-import React, { useState, useEffect } from 'react';
-import './profile.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./profile.css";
 
-const profile = () => {
+function Profile() {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    city: '',
-    address: '',
-    password: ''
+    name: "",
+    email: "",
+    phone_number: "",
+    city: "",
+    address: "",
   });
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  // Placeholder useEffect (to connect later with backend)
   useEffect(() => {
-    // TODO: fetch user data from backend here
-    // Example:
-    // fetchUserProfile();
-    setLoading(false);
-  }, []);
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          navigate("/error_signin");
+          return;
+        }
 
-  const handleInputChange = (e) => {
+        const response = await fetch("http://localhost:8000/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status === 401) {
+          navigate("/error_signin");
+          return;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Erreur lors du chargement du profil");
+        }
+
+        setUser({
+          name: data.user.name || "",
+          email: data.user.email || "",
+          phone_number: data.user.phone || "",
+          city: data.user.city || "",
+          address: data.user.address || "",
+        });
+      } catch (err) {
+        console.error(err);
+        setError("Impossible de charger le profil.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    // TODO: send updated user data to backend
-    console.log('User data to update:', user);
-    setMessage('Profil mis à jour (simulation, à connecter au backend)');
-    setIsEditing(false);
+    setMessage("");
+    setError("");
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch("http://localhost:8000/me/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(user),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Erreur lors de la mise à jour");
+      }
+
+      setMessage("Profil mis à jour avec succès !");
+      setEditing(false);
+    } catch (err) {
+      console.error(err);
+      setError("Une erreur est survenue. Réessayez plus tard.");
+    }
   };
 
-  const handleCancel = () => {
-    // TODO: reload original data from backend
-    setIsEditing(false);
-    setMessage('');
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer votre compte ?")) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch("http://localhost:8000/me/delete", {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || "Erreur lors de la suppression du compte.");
+        return;
+      }
+
+      alert("Compte supprimé avec succès !");
+      localStorage.clear();
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      alert("Une erreur est survenue. Réessayez plus tard.");
+    }
   };
 
   if (loading) {
-    return <div className="loading">Chargement du profil...</div>;
+    return <div className="profile-container">Chargement du profil...</div>;
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <h1>Mon Profil</h1>
-        <p>Gérez vos informations personnelles</p>
-      </div>
+    <div className="profile-page">
+      {/* HEADER */}
+      <header className="doctorplus-header">
+        <div className="logo">DoctorPlus+</div>
+        <nav>
+          <a href="/home">Home</a>
+          <a href="/about">About Us</a>
+          <a href="/services">Services</a>
+          <a href="/profile" className="active">
+            Profile
+          </a>
+          <a href="/contact">Contact</a>
+        </nav>
+      </header>
 
-      {message && (
-        <div className={`message ${message.includes('Erreur') ? 'error' : 'success'}`}>
-          {message}
-        </div>
-      )}
+      {/* BACKGROUND + FORM */}
+      <div className="profile-hero">
+        <div className="overlay"></div>
+        <div className="profile-form-container">
+          <h1>Mon Profil</h1>
+          <p>Gérez vos informations personnelles</p>
 
-      <div className="profile-card">
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="name">Nom complet</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={user.name}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              required
-            />
-          </div>
+          {error && <div className="message error">{error}</div>}
+          {message && <div className="message success">{message}</div>}
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={user.email}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="phoneNumber">Numéro de téléphone</label>
-            <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={user.phoneNumber}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="city">Ville</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={user.city}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="address">Adresse</label>
-            <textarea
-              id="address"
-              name="address"
-              value={user.address}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              rows="3"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">
-              Mot de passe {!isEditing && <span className="password-note">(caché pour des raisons de sécurité)</span>}
-            </label>
-            {isEditing ? (
+          <form onSubmit={handleSave} className="profile-form">
+            <div className="form-row">
               <input
-                type="password"
-                id="password"
-                name="password"
-                value={user.password}
-                onChange={handleInputChange}
-                placeholder="Entrez votre nouveau mot de passe"
+                type="text"
+                name="name"
+                placeholder="Nom complet"
+                value={user.name}
+                onChange={handleChange}
+                disabled={!editing}
               />
-            ) : (
               <input
-                type="password"
-                value="••••••••"
-                disabled
-                className="password-hidden"
+                type="email"
+                name="email"
+                placeholder="Adresse email"
+                value={user.email}
+                onChange={handleChange}
+                disabled={!editing}
               />
-            )}
-          </div>
+            </div>
 
-          <div className="profile-actions">
-            {!isEditing ? (
-              <button 
-                type="button" 
-                className="btn-edit"
-                onClick={() => setIsEditing(true)}
-              >
-                Modifier le profil
-              </button>
-            ) : (
-              <div className="edit-actions">
-                <button type="submit" className="btn-save">
-                  Enregistrer
-                </button>
-                <button 
-                  type="button" 
-                  className="btn-cancel"
-                  onClick={handleCancel}
+            <div className="form-row">
+              <input
+                type="text"
+                name="phone_number"
+                placeholder="Numéro de téléphone"
+                value={user.phone_number}
+                onChange={handleChange}
+                disabled={!editing}
+              />
+              <input
+                type="text"
+                name="city"
+                placeholder="Ville"
+                value={user.city}
+                onChange={handleChange}
+                disabled={!editing}
+              />
+            </div>
+
+            <div className="form-row">
+              <input
+                type="text"
+                name="address"
+                placeholder="Adresse"
+                value={user.address}
+                onChange={handleChange}
+                disabled={!editing}
+              />
+            </div>
+
+            <div className="profile-actions">
+              {!editing ? (
+                <button
+                  type="button"
+                  onClick={() => setEditing(true)}
+                  className="btn-primary"
                 >
-                  Annuler
+                  Modifier le profil
                 </button>
-              </div>
-            )}
-          </div>
-        </form>
-      </div>
+              ) : (
+                <div className="edit-actions">
+                  <button type="submit" className="btn-primary">
+                    Enregistrer
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditing(false)}
+                    className="btn-secondary"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              )}
+            </div>
+          </form>
 
-      <div className="profile-info">
-        <h3>Informations du compte</h3>
-        <div className="info-grid">
-          <div className="info-item">
-            <span className="info-label">Date de création:</span>
-            <span className="info-value">{new Date().toLocaleDateString()}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Statut:</span>
-            <span className="info-value status-active">Actif</span>
+          <div className="auth-buttons">
+            <button onClick={handleLogout} className="btn-logout">
+              Se déconnecter
+            </button>
+            <button onClick={handleDeleteAccount} className="btn-delete">
+              Supprimer mon compte
+            </button>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default profile;
+export default Profile;

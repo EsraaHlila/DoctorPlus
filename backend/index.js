@@ -188,8 +188,15 @@ res.status(200).json({
 
 
 //get your profile
+
+
 app.get('/me', authenticateToken, async (req, res) => {
   try {
+    // if no user in token (unauthorized)
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'Please sign in first.' });
+    }
+
     const result = await pool.query(
       'SELECT id, name, email, address, phone_number, city FROM users WHERE id = $1',
       [req.user.id]
@@ -201,7 +208,6 @@ app.get('/me', authenticateToken, async (req, res) => {
 
     const user = result.rows[0];
 
-    // map DB fields to frontend expected structure
     res.json({
       user: {
         id: user.id,
@@ -210,7 +216,6 @@ app.get('/me', authenticateToken, async (req, res) => {
         phone: user.phone_number,
         address: user.address,
         city: user.city,
-        language: 'English' // placeholder, since not in DB
       }
     });
   } catch (err) {
@@ -218,6 +223,15 @@ app.get('/me', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching profile' });
   }
 });
+
+
+
+
+
+
+
+
+
 
 
 //update your profile
@@ -238,6 +252,21 @@ app.put('/me/update', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Server error while updating profile' });
   }
 });
+
+// delete your account
+app.delete('/me/delete', authenticateToken, async (req, res) => {
+  try {
+    // Delete user by ID (from the decoded token)
+    await pool.query('DELETE FROM users WHERE id = $1', [req.user.id]);
+
+    res.json({ message: 'Account deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting account:', err);
+    res.status(500).json({ message: 'Server error while deleting account' });
+  }
+});
+
+
 
 
 
