@@ -140,12 +140,12 @@ function Profile() {
         <div className="logo">DoctorPlus+</div>
         <nav>
           <a href="/home">Home</a>
-          <a href="/about">About Us</a>
-          <a href="/services">Services</a>
-          <a href="/profile" className="active">
+          <a href="#">About Us</a>
+          <a href="#">Services</a>
+          <a href="#" className="active">
             Profile
           </a>
-          <a href="/contact">Contact</a>
+          <a href="#">Contact</a>
         </nav>
       </header>
 
