@@ -1,0 +1,165 @@
+[33mcommit 00f1999fb7b1514a8dffca06a1cf0e76f1c0fcc9[m[33m ([m[1;32mmain[m[33m)[m
+Author: abir <abirfitouri2023@gmail.com>
+Date:   Thu Nov 27 21:12:21 2025 +0100
+
+    Updated HomePage design and fixed UI details (Abir)
+
+[1mdiff --git a/frontend/package-lock.json b/frontend/package-lock.json[m
+[1mindex 60fd0cc..6e66210 100644[m
+[1m--- a/frontend/package-lock.json[m
+[1m+++ b/frontend/package-lock.json[m
+[36m@@ -22,14 +22,10 @@[m
+     },[m
+     "node_modules/@adobe/css-tools": {[m
+       "version": "4.4.4",[m
+[31m-      "resolved": "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.4.4.tgz",[m
+[31m-      "integrity": "sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==",[m
+       "license": "MIT"[m
+     },[m
+     "node_modules/@alloc/quick-lru": {[m
+       "version": "5.2.0",[m
+[31m-      "resolved": "https://registry.npmjs.org/@alloc/quick-lru/-/quick-lru-5.2.0.tgz",[m
+[31m-      "integrity": "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==",[m
+       "license": "MIT",[m
+       "engines": {[m
+         "node": ">=10"[m
+[36m@@ -40,8 +36,6 @@[m
+     },[m
+     "node_modules/@babel/code-frame": {[m
+       "version": "7.27.1",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.27.1.tgz",[m
+[31m-      "integrity": "sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==",[m
+       "license": "MIT",[m
+       "dependencies": {[m
+         "@babel/helper-validator-identifier": "^7.27.1",[m
+[36m@@ -54,8 +48,6 @@[m
+     },[m
+     "node_modules/@babel/compat-data": {[m
+       "version": "7.28.5",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.28.5.tgz",[m
+[31m-      "integrity": "sha512-6uFXyCayocRbqhZOB+6XcuZbkMNimwfVGFji8CTZnCzOHVGvDqzvitu1re2AU5LROliz7eQPhB8CpAMvnx9EjA==",[m
+       "license": "MIT",[m
+       "engines": {[m
+         "node": ">=6.9.0"[m
+[36m@@ -63,8 +55,6 @@[m
+     },[m
+     "node_modules/@babel/core": {[m
+       "version": "7.28.5",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/core/-/core-7.28.5.tgz",[m
+[31m-      "integrity": "sha512-e7jT4DxYvIDLk1ZHmU/m/mB19rex9sv0c2ftBtjSBv+kVM/902eh0fINUzD7UwLLNR+jU585GxUJ8/EBfAM5fw==",[m
+       "license": "MIT",[m
+       "peer": true,[m
+       "dependencies": {[m
+[36m@@ -94,8 +84,6 @@[m
+     },[m
+     "node_modules/@babel/core/node_modules/semver": {[m
+       "version": "6.3.1",[m
+[31m-      "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz",[m
+[31m-      "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",[m
+       "license": "ISC",[m
+       "bin": {[m
+         "semver": "bin/semver.js"[m
+[36m@@ -103,8 +91,6 @@[m
+     },[m
+     "node_modules/@babel/eslint-parser": {[m
+       "version": "7.28.5",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/eslint-parser/-/eslint-parser-7.28.5.tgz",[m
+[31m-      "integrity": "sha512-fcdRcWahONYo+JRnJg1/AekOacGvKx12Gu0qXJXFi2WBqQA1i7+O5PaxRB7kxE/Op94dExnCiiar6T09pvdHpA==",[m
+       "license": "MIT",[m
+       "dependencies": {[m
+         "@nicolo-ribaudo/eslint-scope-5-internals": "5.1.1-v1",[m
+[36m@@ -121,8 +107,6 @@[m
+     },[m
+     "node_modules/@babel/eslint-parser/node_modules/eslint-visitor-keys": {[m
+       "version": "2.1.0",[m
+[31m-      "resolved": "https://registry.npmjs.org/eslint-visitor-keys/-/eslint-visitor-keys-2.1.0.tgz",[m
+[31m-      "integrity": "sha512-0rSmRBzXgDzIsD6mGdJgevzgezI534Cer5L/vyMX0kHzT/jiB43jRhd9YUlMGYLQy2zprNmoT8qasCGtY+QaKw==",[m
+       "license": "Apache-2.0",[m
+       "engines": {[m
+         "node": ">=10"[m
+[36m@@ -130,8 +114,6 @@[m
+     },[m
+     "node_modules/@babel/eslint-parser/node_modules/semver": {[m
+       "version": "6.3.1",[m
+[31m-      "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz",[m
+[31m-      "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",[m
+       "license": "ISC",[m
+       "bin": {[m
+         "semver": "bin/semver.js"[m
+[36m@@ -139,8 +121,6 @@[m
+     },[m
+     "node_modules/@babel/generator": {[m
+       "version": "7.28.5",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/generator/-/generator-7.28.5.tgz",[m
+[31m-      "integrity": "sha512-3EwLFhZ38J4VyIP6WNtt2kUdW9dokXA9Cr4IVIFHuCpZ3H8/YFOl5JjZHisrn1fATPBmKKqXzDFvh9fUwHz6CQ==",[m
+       "license": "MIT",[m
+       "dependencies": {[m
+         "@babel/parser": "^7.28.5",[m
+[36m@@ -155,8 +135,6 @@[m
+     },[m
+     "node_modules/@babel/helper-annotate-as-pure": {[m
+       "version": "7.27.3",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.27.3.tgz",[m
+[31m-      "integrity": "sha512-fXSwMQqitTGeHLBC08Eq5yXz2m37E4pJX1qAU1+2cNedz/ifv/bVXft90VeSav5nFO61EcNgwr0aJxbyPaWBPg==",[m
+       "license": "MIT",[m
+       "dependencies": {[m
+         "@babel/types": "^7.27.3"[m
+[36m@@ -167,8 +145,6 @@[m
+     },[m
+     "node_modules/@babel/helper-compilation-targets": {[m
+       "version": "7.27.2",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/helper-compilation-targets/-/helper-compilation-targets-7.27.2.tgz",[m
+[31m-      "integrity": "sha512-2+1thGUUWWjLTYTHZWK1n8Yga0ijBz1XAhUXcKy81rd5g6yh7hGqMp45v7cadSbEHc9G3OTv45SyneRN3ps4DQ==",[m
+       "license": "MIT",[m
+       "dependencies": {[m
+         "@babel/compat-data": "^7.27.2",[m
+[36m@@ -183,8 +159,6 @@[m
+     },[m
+     "node_modules/@babel/helper-compilation-targets/node_modules/semver": {[m
+       "version": "6.3.1",[m
+[31m-      "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz",[m
+[31m-      "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",[m
+       "license": "ISC",[m
+       "bin": {[m
+         "semver": "bin/semver.js"[m
+[36m@@ -192,8 +166,6 @@[m
+     },[m
+     "node_modules/@babel/helper-create-class-features-plugin": {[m
+       "version": "7.28.5",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-7.28.5.tgz",[m
+[31m-      "integrity": "sha512-q3WC4JfdODypvxArsJQROfupPBq9+lMwjKq7C33GhbFYJsufD0yd/ziwD+hJucLeWsnFPWZjsU2DNFqBPE7jwQ==",[m
+       "license": "MIT",[m
+       "dependencies": {[m
+         "@babel/helper-annotate-as-pure": "^7.27.3",[m
+[36m@@ -213,8 +185,6 @@[m
+     },[m
+     "node_modules/@babel/helper-create-class-features-plugin/node_modules/semver": {[m
+       "version": "6.3.1",[m
+[31m-      "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz",[m
+[31m-      "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",[m
+       "license": "ISC",[m
+       "bin": {[m
+         "semver": "bin/semver.js"[m
+[36m@@ -222,8 +192,6 @@[m
+     },[m
+     "node_modules/@babel/helper-create-regexp-features-plugin": {[m
+       "version": "7.28.5",[m
+[31m-      "resolved": "https://registry.npmjs.org/@babel/helper-create-regexp-features-plugin/-/helper-create-regexp-features-plugin-7.28.5.tgz",[m
+[31m-      "integrity": "sha512-N1EhvLtHzOvj7QQOUCCS3NrPJP8c5W6ZXCHDn7Yialuy1iu4r5EmIYkXlKNqT99Ciw+W0mDqWoR6HWMZlFP3hw==",[m
+       "license": "MIT",[m
+       "dependencies": {[m
+         "@babel/helper-annotate-as-pure": "^7.27.3",[m
+[36m@@ -239,8 +207,6 @@[m
+     },[m
+     "node_modules/@babel/helper-create-regexp-features-plugin/node_modules/semver": {[m
+       "version": "6.3.1",[m
+[31m-      "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz",[m
+[31m-      "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",[m
+       "license": "ISC",[m
+       "bin": {[m
+         "semver": "bin/semver.js"[m
+[36m@@ -248,8 +214,6 @@[m
+     },[m
+     "node_modules/@babel/helper-define-polyfill-provider": {[m
+       "version": "0.6.5",[m
+[31m-      "res
