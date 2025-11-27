@@ -1,4 +1,3 @@
-// File: ProfilePage.js
 import React, { useState, useRef } from 'react';
 import './ProfilePage.css';
 
@@ -50,15 +49,19 @@ export default function ProfilePage() {
 
   return (
     <div className="pp-container">
-      <header className="pp-header">
-        <nav className="pp-nav-left">
-          <a>Home</a>
-          <a>About Us</a>
-          <a>Profile</a>
-          <a>Contact</a>
-        </nav>
-        <div className="pp-brand">DoctorPlus+</div>
-      </header>
+      {/* Top Navigation */}
+      <nav className="navbar">
+        <div className="logo">
+          <span className="brand">Doctor</span>
+          <span className="plus">Plus+</span>
+        </div>
+        <ul className="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
 
       <div className="pp-body">
         <aside className="pp-sidebar">
