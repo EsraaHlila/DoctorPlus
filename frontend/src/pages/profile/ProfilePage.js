@@ -1,0 +1,149 @@
+// File: ProfilePage.js
+import React, { useState, useRef } from 'react';
+import './ProfilePage.css';
+
+const MENU = [
+  'My Profile',
+  'Activity History',
+  'Privacy Policy',
+  'settings',
+  'Help',
+  'Logout',
+];
+
+export default function ProfilePage() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [hoverIndex, setHoverIndex] = useState(null);
+  const [form, setForm] = useState({ firstName: '', lastName: '', birthday: '', phone: '' });
+  const [profileSrc, setProfileSrc] = useState('/defaultProfile.png'); // default profile image
+  const fileInputRef = useRef(null);
+
+  function handleMenuClick(i) {
+    setActiveIndex(i);
+  }
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  }
+
+  function onReset() {
+    setForm({ firstName: '', lastName: '', birthday: '', phone: '' });
+  }
+
+  function onSave(e) {
+    e?.preventDefault();
+    console.log('Saved (front-end only):', form);
+    alert('Form saved (front-end only)');
+  }
+
+  function onChangeProfileClick() {
+    fileInputRef.current?.click();
+  }
+
+  function onProfileSelected(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    setProfileSrc(url);
+  }
+
+  return (
+    <div className="pp-container">
+      <header className="pp-header">
+        <nav className="pp-nav-left">
+          <a>Home</a>
+          <a>About Us</a>
+          <a>Profile</a>
+          <a>Contact</a>
+        </nav>
+        <div className="pp-brand">DoctorPlus+</div>
+      </header>
+
+      <div className="pp-body">
+        <aside className="pp-sidebar">
+          {MENU.map((label, i) => {
+            const active = i === activeIndex;
+            const hovering = i === hoverIndex;
+
+            return (
+              <div
+                key={label}
+                className={`pp-menu-item ${active ? 'active' : ''} ${hovering && !active ? 'hover' : ''}`}
+                onClick={() => handleMenuClick(i)}
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(null)}
+              >
+
+                {/* --- Sidebar Icon for Each Menu Item --- */}
+                <img
+                  className="pp-dot-img"
+                  src={
+                    i === 0 ? "/user.png" :
+                    i === 1 ? "/history.png" :
+                    i === 2 ? "/shield.png" :
+                    i === 3 ? "/cogwheel.png" :
+                    i === 4 ? "/question.png" :
+                    "/logout.png"
+                  }
+                  alt=""
+                />
+
+                <span className="pp-menu-text">{label}</span>
+              </div>
+            );
+          })}
+        </aside>
+
+        <main className="pp-main">
+          <h1 className="pp-title">Edit profile</h1>
+
+          <div className="pp-profile-wrap">
+            <div className="pp-avatar-holder">
+
+              {/* --- Correct Profile Picture Section --- */}
+              <img className="pp-avatar" src={profileSrc} alt="profile" />
+
+            </div>
+
+            <button className="pp-change-btn" onClick={onChangeProfileClick}>Change</button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={onProfileSelected}
+              style={{ display: 'none' }}
+            />
+          </div>
+
+          <form className="pp-form" onSubmit={onSave}>
+            <label className="pp-field">
+              <div className="pp-label">First name</div>
+              <input name="firstName" value={form.firstName} onChange={handleChange} />
+            </label>
+
+            <label className="pp-field">
+              <div className="pp-label">Last name</div>
+              <input name="lastName" value={form.lastName} onChange={handleChange} />
+            </label>
+
+            <label className="pp-field">
+              <div className="pp-label">Birthday</div>
+              <input name="birthday" value={form.birthday} onChange={handleChange} placeholder="YYYY-MM-DD" />
+            </label>
+
+            <label className="pp-field">
+              <div className="pp-label">Phone number</div>
+              <input name="phone" value={form.phone} onChange={handleChange} />
+            </label>
+
+            <div className="pp-actions">
+              <button type="button" className="pp-reset" onClick={onReset}>Reset</button>
+              <button type="submit" className="pp-save">Save</button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+  );
+}

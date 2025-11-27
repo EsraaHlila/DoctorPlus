@@ -1,6 +1,7 @@
 import React from "react";
 import "./HomePage.css";
 import doctorBg from "../doctor-bg.jpg";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   return (
@@ -26,11 +27,10 @@ function HomePage() {
       >
         <div className="hero-overlay">
           <div className="hero-content">
-            <h1>Book Your Doctor Appointment Online</h1>
+            <h1>Book Your Doctor 
+              Appointment Online</h1>
             <p>
               A Healthier Tomorrow Starts Today — Schedule Your Appointment!
-              <br />
-              Your Wellness, Our Expertise: Set Up Your Appointment Today.
             </p>
             <div className="buttons">
               <button className="btn primary">Book an Appointment</button>
@@ -52,7 +52,6 @@ function HomePage() {
               <li>Sunday: Closed</li>
             </ul>
           </div>
-
           {/* Appointments History */}
           <div className="schedule-card">
             <h3>Appointments History</h3>
