@@ -26,6 +26,23 @@ const pool = new Pool({
   port: 5432,
 });
 
+
+
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+});
+
+const upload = multer({ storage });
+
+
+
+
+
+
+
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -265,6 +282,89 @@ app.delete('/me/delete', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Server error while deleting account' });
   }
 });
+
+
+
+//change password route
+
+
+// change password route
+app.put('/change-password', async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+
+    if (!email || !oldPassword || !newPassword) {
+      return res.status(400).json({
+        message: 'Missing required fields.',
+      });
+    }
+
+    // get the user
+    const userResult = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const user = userResult.rows[0];
+
+    // compare passwords
+    const match = await bcrypt.compare(oldPassword, user.password);
+    if (!match) {
+      return res.status(401).json({ message: "Old password is incorrect." });
+    }
+
+    // hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // update password in DB
+    await pool.query(
+      "UPDATE users SET password = $1 WHERE email = $2",
+      [hashedPassword, email]
+    );
+
+    res.json({ message: "Password updated successfully!" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error." });
+  }
+});
+
+
+
+//change profile photo route
+
+
+// change profile picture route
+app.put('/change-profile-picture', upload.single('image'), async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email || !req.file) {
+      return res.status(400).json({
+        message: "Missing email or image file."
+      });
+    }
+
+    const filename = req.file.filename;
+
+    await pool.query(
+      "UPDATE users SET profile_picture = $1 WHERE email = $2",
+      [filename, email]
+    );
+
+    res.json({
+      message: "Profile picture updated!",
+      file: filename
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error." });
+  }
+});
+
 
 
 

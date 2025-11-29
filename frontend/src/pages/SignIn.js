@@ -36,7 +36,7 @@ function SignIn() {
       }
 
       // ✅ Login successful
-      setSuccess("Connexion réussie ✅");
+      setSuccess("Connexion réussie ");
 
       // Save token to localStorage (for future authenticated requests)
       localStorage.setItem("accessToken", data.accessToken);
@@ -55,7 +55,7 @@ function SignIn() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2 className="auth-title">👨‍⚕️ DoctorPlus</h2>
+        <h2 className="auth-title"> DoctorPlus</h2>
         <p className="auth-subtitle">Connectez-vous à votre espace</p>
         <form onSubmit={handleSubmit}>
           <input
