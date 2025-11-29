@@ -6,7 +6,6 @@
   color: black;
 }
 
-/* HEADER */
 .pp-header {
   display: flex;
   justify-content: space-between;
@@ -26,14 +25,12 @@
   color: #0080ff;
 }
 
-/* BODY */
 .pp-body {
   display: flex;
   padding: 30px;
   gap: 40px;
 }
 
-/* SIDEBAR */
 .pp-sidebar {
   width: 220px;
   display: flex;
@@ -51,7 +48,6 @@
   transition: 0.2s;
 }
 
-/* red circle image placeholder */
 .pp-dot-img {
   width: 30px;
   height: 30px;
@@ -59,39 +55,37 @@
   
 }
 
-/* text */
 .pp-menu-text {
   font-size: 16px;
   font-weight: bold;
 }
 
-/* hover = light blue */
 .pp-menu-item.hover {
   background: #7ac4ff;
 }
 
-/* active = dark blue */
 .pp-menu-item.active {
   background: #1366d6;
   color: white;
 }
 
-/* MAIN */
 .pp-main {
   flex: 1;
-  padding-left: 0; /* remove left padding */
+  padding-left: 0; 
   display: flex;
   flex-direction: column;
-  align-items: center; /* center everything horizontally */
+  align-items: center; 
 }
 
 
 .pp-title {
+  margin-bottom: 15px;
   font-size: 32px;
-  margin-bottom: 30px;
+  font-weight: bold;
+  display: flex;
 }
 
-/* PROFILE IMAGE */
+
 .pp-profile-wrap {
   display: flex;
   flex-direction: column;
@@ -125,7 +119,6 @@
   font-size: 14px;
 }
 
-/* FORM */
 .pp-form {
   display: flex;
   flex-direction: column;
@@ -142,24 +135,23 @@
 }
 
 .pp-label {
-  font-size: 12px;
+  font-size: 15px;
   margin-bottom: 3px;
 }
 
-/* ACTION BUTTONS */
 .pp-actions {
   display: flex;
   gap: 15px;
   margin-top: 15px;
-  justify-content: center; /* <-- center the buttons horizontally */
+  justify-content: center; 
 }
 
 
 .pp-reset,
 .pp-save {
   padding: 10px 22px;
-  background: #1366d6; /* blue background */
-  color: white; /* white text */
+  background: #1366d6; 
+  color: white; 
   border-radius: 12px;
   border: none;
   cursor: pointer;
@@ -169,6 +161,6 @@
 
 .pp-reset:hover,
 .pp-save:hover {
-  background: #0f4ea8; /* slightly darker blue on hover */
+  background: #0f4ea8; 
 }
 

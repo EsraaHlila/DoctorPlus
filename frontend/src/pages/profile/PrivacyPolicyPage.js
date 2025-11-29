@@ -4,14 +4,13 @@ import './PrivacyPolicyPage.css';
 const MENU = [
   'My Profile',
   'Activity History',
-  'Privacy Policy',
   'Settings',
   'Help',
   'Logout',
 ];
 
 export default function PrivacyPolicyPage() {
-  const [activeIndex, setActiveIndex] = useState(2); // Privacy Policy active
+  const [activeIndex, setActiveIndex] = useState(2); 
   const [hoverIndex, setHoverIndex] = useState(null);
 
   function handleMenuClick(i) {
@@ -20,8 +19,7 @@ export default function PrivacyPolicyPage() {
 
   return (
     <div className="pp-container">
-      {/* Top Navigation */}
-        <nav className="navbar">
+      <nav className="navbar">
         <div className="logo">
           <span className="brand">Doctor</span>
           <span className="plus">Plus+</span>
@@ -35,7 +33,6 @@ export default function PrivacyPolicyPage() {
       </nav>
 
       <div className="pp-body">
-        {/* Sidebar */}
         <aside className="pp-sidebar">
           {MENU.map((label, i) => {
             const active = i === activeIndex;
@@ -53,7 +50,6 @@ export default function PrivacyPolicyPage() {
                   src={
                     i === 0 ? "/user.png" :
                     i === 1 ? "/history.png" :
-                    i === 2 ? "/shield.png" :
                     i === 3 ? "/cogwheel.png" :
                     i === 4 ? "/question.png" :
                     "/logout.png"
@@ -66,7 +62,6 @@ export default function PrivacyPolicyPage() {
           })}
         </aside>
 
-        {/* Main Privacy Policy Content */}
         <main className="pp-main privacy-policy">
           <h1 className="pp-title">Privacy Policy</h1>
           <p className="pp-update">Last update: 14/08/2024</p>

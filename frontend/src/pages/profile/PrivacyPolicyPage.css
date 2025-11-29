@@ -1,4 +1,4 @@
-/* File: PrivacyPolicyPage.css */
+
 .pp-container {
   width: 100%;
   min-height: 100vh;
@@ -7,7 +7,6 @@
   color: black;
 }
 
-/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -59,12 +58,21 @@
 }
 
 .pp-main {
+  .pp-main {
   padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  text-align: center;   
+}
+
 }
 
 .privacy-policy h1.pp-title {
-  font-size: 36px;
   margin-bottom: 15px;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
 }
 
 .pp-update {
@@ -80,6 +88,7 @@
 .privacy-policy h2 {
   font-size: 24px;
   margin-bottom: 15px;
+  color: #0080ff;
 }
 
 .privacy-policy p {

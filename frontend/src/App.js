@@ -8,6 +8,8 @@ import Profile from "./pages/profile/ProfilePage";
 import HomePage from "./pages/HomePage"
 import PrivacyPolicyPage from "./pages/profile/PrivacyPolicyPage";
 import SettingsPage from "./pages/profile/SettingsPage";
+import HelpPage from "./pages/profile/HelpPage";
+
 function App() {
   return (
     <div>
@@ -20,6 +22,8 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/help" element={<HelpPage />} />
+
       </Routes>
     </Router>
     </div>

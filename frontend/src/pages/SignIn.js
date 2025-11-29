@@ -6,7 +6,6 @@ export default function Login() {
   return (
     <div className="login-container">
       <div className="left-side">
-        {/* Use only the imported image */}
         <img 
           src={bgImage} 
           alt="Background" 

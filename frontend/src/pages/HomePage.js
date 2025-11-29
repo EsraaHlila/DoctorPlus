@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 function HomePage() {
   return (
     <div className="homepage">
-      {/* Navbar */}
       <nav className="navbar">
         <div className="logo">
           <span className="brand">Doctor</span>
@@ -20,7 +19,6 @@ function HomePage() {
         </ul>
       </nav>
 
-      {/* Hero Section */}
       <section
         className="hero"
         style={{ backgroundImage: `url(${doctorBg})` }}
@@ -40,10 +38,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Schedule Section */}
       <section className="schedule-section">
         <div className="schedule-cards">
-          {/* Working Hours */}
           <div className="schedule-card">
             <h3>Working Hours</h3>
             <ul>
@@ -52,7 +48,6 @@ function HomePage() {
               <li>Sunday: Closed</li>
             </ul>
           </div>
-          {/* Appointments History */}
           <div className="schedule-card">
             <h3>Appointments History</h3>
             <ul>

@@ -4,9 +4,8 @@ import './ProfilePage.css';
 const MENU = [
   'My Profile',
   'Activity History',
-  'Privacy Policy',
   'settings',
-  'Help',
+  'Help Center',
   'Logout',
 ];
 
@@ -14,7 +13,7 @@ export default function ProfilePage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', birthday: '', phone: '' });
-  const [profileSrc, setProfileSrc] = useState('/defaultProfile.png'); // default profile image
+  const [profileSrc, setProfileSrc] = useState('/defaultProfile.png'); 
   const fileInputRef = useRef(null);
 
   function handleMenuClick(i) {
@@ -49,7 +48,7 @@ export default function ProfilePage() {
 
   return (
     <div className="pp-container">
-      {/* Top Navigation */}
+
       <nav className="navbar">
         <div className="logo">
           <span className="brand">Doctor</span>
@@ -77,16 +76,13 @@ export default function ProfilePage() {
                 onMouseEnter={() => setHoverIndex(i)}
                 onMouseLeave={() => setHoverIndex(null)}
               >
-
-                {/* --- Sidebar Icon for Each Menu Item --- */}
                 <img
                   className="pp-dot-img"
                   src={
                     i === 0 ? "/user.png" :
                     i === 1 ? "/history.png" :
-                    i === 2 ? "/shield.png" :
-                    i === 3 ? "/cogwheel.png" :
-                    i === 4 ? "/question.png" :
+                    i === 2 ? "/cogwheel.png" :
+                    i === 3 ? "/question.png" :
                     "/logout.png"
                   }
                   alt=""
@@ -103,8 +99,6 @@ export default function ProfilePage() {
 
           <div className="pp-profile-wrap">
             <div className="pp-avatar-holder">
-
-              {/* --- Correct Profile Picture Section --- */}
               <img className="pp-avatar" src={profileSrc} alt="profile" />
 
             </div>

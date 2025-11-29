@@ -1,86 +1,68 @@
 import React, { useState } from "react";
-import './SettingsPage.css';
+import "./SettingsPage.css";
 
 const MENU = [
-  'My Profile',
-  'Activity History',
-  'Privacy Policy',
-  'Settings',
-  'Help',
-  'Logout',
+  "My Profile",
+  "Activity History",
+  "Settings",
+  "Help Center",
+  "Logout",
 ];
 
 export default function SettingsPage() {
-  const [activeIndex, setActiveIndex] = useState(3); // Settings active
+  const [activeIndex, setActiveIndex] = useState(2);
   const [hoverIndex, setHoverIndex] = useState(null);
 
-  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  function handleMenuClick(i) {
-    setActiveIndex(i);
-  }
-
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  }
-
-  function onSave(e) {
-    e.preventDefault();
-    if (form.newPassword !== form.confirmPassword) {
-      alert("New password and confirmation do not match!");
-      return;
-    }
-    alert("Password changed successfully (front-end only)");
-    setForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  }
-
-  function onDeleteAccount() {
-    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-      alert("Account deleted (front-end only)");
-    }
-  }
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   return (
     <div className="pp-container">
-      {/* Top Navigation */}
+
       <nav className="navbar">
         <div className="logo">
           <span className="brand">Doctor</span>
           <span className="plus">Plus+</span>
         </div>
         <ul className="nav-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Profile</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
 
       <div className="pp-body">
-        {/* Sidebar */}
+
         <aside className="pp-sidebar">
           {MENU.map((label, i) => {
             const active = i === activeIndex;
-            const hovering = i === hoverIndex;
+            const hover = i === hoverIndex;
             return (
               <div
                 key={label}
-                className={`pp-menu-item ${active ? 'active' : ''} ${hovering && !active ? 'hover' : ''}`}
-                onClick={() => handleMenuClick(i)}
+                onClick={() => setActiveIndex(i)}
                 onMouseEnter={() => setHoverIndex(i)}
                 onMouseLeave={() => setHoverIndex(null)}
+                className={`pp-menu-item ${active ? "active" : ""} ${
+                  !active && hover ? "hover" : ""
+                }`}
               >
                 <img
                   className="pp-dot-img"
                   src={
-                    i === 0 ? "/user.png" :
-                    i === 1 ? "/history.png" :
-                    i === 2 ? "/shield.png" :
-                    i === 3 ? "/cogwheel.png" :
-                    i === 4 ? "/question.png" :
-                    "/logout.png"
+                    i === 0
+                      ? "/user.png"
+                      : i === 1
+                      ? "/history.png"
+                      : i === 2
+                      ? "/cogwheel.png"
+                      : i === 3
+                      ? "/question.png"
+                      : "/logout.png"
                   }
                   alt=""
                 />
@@ -90,71 +72,132 @@ export default function SettingsPage() {
           })}
         </aside>
 
-        {/* Main Settings Content */}
-        <main className="settings-content">
-          {/* Change Password */}
-          <section className="settings-section">
-            <form className="settings-form" onSubmit={onSave}>
-              <h2>Change Password</h2>
+        <main className="settings-main">
+          <h1 className="settings-title">Settings</h1>
+          <p className="settings-subtitle">Manage your account settings below.</p>
 
-              <label className="settings-field">
-                Current Password
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="currentPassword"
-                  value={form.currentPassword}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
+          <div className="settings-card">
 
-              <label className="settings-field">
-                New Password
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="newPassword"
-                  value={form.newPassword}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-
-              <label className="settings-field">
-                Confirm New Password
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-
-              <div className="settings-options">
-                <label className="show-password">
-                  <input
-                    type="checkbox"
-                    checked={showPassword}
-                    onChange={() => setShowPassword(!showPassword)}
-                  />
-                  Show Password
-                </label>
-                <a href="/forgot-password" className="forgot-password">Forgot Password?</a>
+            <div className="settings-row" onClick={() => setShowPasswordModal(true)}>
+              <div>
+                <h3 className="row-title">Change Password</h3>
+                <p className="row-value">Update your login password</p>
               </div>
+              <span className="arrow">›</span>
+            </div>
 
-              <button type="submit" className="settings-save-btn">Save Password</button>
-            </form>
-          </section>
+            <div className="settings-row" onClick={() => setShowDeleteModal(true)}>
+              <div>
+                <h3 className="row-title">Delete Account</h3>
+                <p className="row-value row-danger">This action is permanent</p>
+              </div>
+              <span className="arrow">›</span>
+            </div>
 
-          {/* Delete Account */}
-          <section className="settings-section">
-            <p className="delete-instruction">
-              Deleting your account is permanent. All your data will be lost and cannot be recovered.
-            </p>
-            <button className="settings-delete-btn" onClick={onDeleteAccount}>Delete Account</button>
-          </section>
+          </div>
         </main>
       </div>
+
+      {showPasswordModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h2 className="modal-title">Change your password</h2>
+
+            <label className="modal-label">Old password</label>
+            <input
+              type={showOldPassword ? "text" : "password"}
+              className="modal-input"
+            />
+            <div className="checkbox-row">
+              <input
+                type="checkbox"
+                id="showOld"
+                checked={showOldPassword}
+                onChange={() => setShowOldPassword(!showOldPassword)}
+              />
+              <label htmlFor="showOld" className="checkbox-label">
+                Show old password
+              </label>
+            </div>
+
+            <label className="modal-label">New password</label>
+            <input
+              type={showNewPassword ? "text" : "password"}
+              className="modal-input"
+            />
+            <div className="checkbox-row">
+              <input
+                type="checkbox"
+                id="showNew"
+                checked={showNewPassword}
+                onChange={() => setShowNewPassword(!showNewPassword)}
+              />
+              <label htmlFor="showNew" className="checkbox-label">
+                Show new password
+              </label>
+            </div>
+
+            <div className="modal-buttons">
+              <button
+                className="btn-cancel"
+                onClick={() => setShowPasswordModal(false)}
+              >
+                Cancel
+              </button>
+              <button className="btn-confirm">Change Password</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+          <h2 className="modal-title">Tell us why you're leaving</h2>
+
+
+            <div className="da-radio-group">
+  <label>
+    <input type="radio" name="reason" />
+    I’m getting too many emails
+  </label>
+  <label>
+    <input type="radio" name="reason" />
+    I accidentally made another account
+  </label>
+  <label>
+    <input type="radio" name="reason" />
+    I'm concerned about privacy
+  </label>
+  <label>
+    <input type="radio" name="reason" />
+    Other
+  </label>
+</div>
+
+
+            <div className="modal-buttons">
+              <button
+                className="btn-cancel"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="btn-confirm"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  alert("Account deletion request sent!");
+                }}
+              >
+                Send email
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
