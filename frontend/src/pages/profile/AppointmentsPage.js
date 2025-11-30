@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./SettingsPage.css";
+import "./AppointmentsPage.css";
 
 const MENU = [
   "My Profile",
@@ -66,8 +66,8 @@ export default function SettingsPage() {
 
         <main className="settings-main">
 
-          <h1 className="settings-title">Help Center</h1>
-          <p className="settings-subtitle">Find answers and get support instantly</p>
+          <h1 className="settings-title">My appointments</h1>
+          <p className="settings-subtitle">Review upcoming and past appointments</p>
           <div className="settings-card">
 
             <div
@@ -75,7 +75,7 @@ export default function SettingsPage() {
               onClick={() => setShowPrivacyPolicy(true)}
             >
               <div>
-                <h3 className="row-title">Privacy Policy</h3>
+                <h3 className="row-title">Previews</h3>
               </div>
               <span className="arrow">›</span>
             </div>
@@ -85,79 +85,16 @@ export default function SettingsPage() {
               onClick={() => setShowHelpPopup(true)}
             >
               <div>
-                <h3 className="row-title">Help</h3>
+                <h3 className="row-title">Active</h3>
               </div>
               <span className="arrow">›</span>
             </div>
 
           </div>
         </main>
+
       </div>
-
-      {showPrivacyPolicy && (
-        <div className="modal-overlay">
-          <div className="modal-box privacy-box popup-3d">
-            <h1 className="pp-title">Privacy Policy</h1>
-            <p className="pp-update">Last update: 14/08/2024</p>
-
-            <div className="modal-content">
-              <section>
-                <p>
-                  At DoctorPlus+, we take your privacy seriously. This Privacy Policy explains how we collect,
-                  use, and protect your personal information when you use our application.
-                </p>
-              </section>
-
-              <section>
-                <h2>Terms & Conditions</h2>
-                <p>1- We use your data to provide and improve our services.</p>
-                <p>2- We may share your information only with trusted providers.</p>
-                <p>3- You have the right to access or delete your information.</p>
-              </section>
-            </div>
-
-            <div className="modal-buttons">
-              <button className="btn-cancel" onClick={() => setShowPrivacyPolicy(false)}>Close</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-{showHelpPopup && (
-  <div className="modal-overlay">
-    <div className="modal-box privacy-box popup-3d">
-      <h2 className="pp-title">Report a Problem</h2>
-
-      <textarea
-        className="help-textarea"
-        placeholder="Please provide as much information as possible…"
-      ></textarea>
-
-      <input
-        type="file"
-        className="help-upload"
-        onChange={(e) => console.log(e.target.files)}
-      />
-
-      <p className="help-footer">
-Your profile name and browser information will be automatically included in the report.</p>
-
-      <div className="modal-buttons">
-        <button
-          className="btn-cancel"
-          onClick={() => setShowHelpPopup(false)}
-        >
-          Cancel
-        </button>
-        <button className="btn-confirm">
-          Send Report
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
     </div>
   );
 }
+

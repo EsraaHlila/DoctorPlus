@@ -1,0 +1,148 @@
+.pp-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.pp-body {
+  display: flex;
+  height: 100%;
+}
+
+.settings-subtitle {
+  margin-top: 8px;
+  color: #8e8e8e;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;  
+  align-items: center;       
+  text-align: center;        
+}
+
+
+.homepage {
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  background-color: #f5f7fa;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background-color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0066cc;
+}
+
+.logo .plus {
+  color: #00b4ff;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.nav-links li a:hover {
+  color: #0066cc;
+}
+
+.pp-sidebar {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pp-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pp-dot-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  
+}
+
+.pp-menu-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.pp-menu-item.hover {
+  background: #7ac4ff;
+}
+
+.pp-menu-item.active {
+  background: #1366d6;
+  color: white;
+}
+
+
+.settings-main {
+  padding: 40px;
+  flex: 1;
+}
+
+.settings-title {
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;  
+  align-items: center;       
+  text-align: center;        
+}
+
+.settings-row {
+  width: 600px;
+  background: #fff;
+  padding: 18px 20px;
+  border: 1px solid #dddfe2;
+  border-radius: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  margin: 18px auto;   
+  transition: background 0.2s ease;
+}
+
+.settings-row:hover {
+  background: #7ac4ff;
+}
+
+.settings-row:active {
+  background: #1366d6;
+  color: white;
+}
+
+.row-title {
+  font-size: 18px;
+  margin: 0;
+  font-weight: bold;
+}
+

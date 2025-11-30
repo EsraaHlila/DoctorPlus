@@ -1,11 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import './ProfilePage.css';
-
-const API = "http://localhost:8000"; // your backend URL
 
 const MENU = [
   'My Profile',
-  'Activity History',
+  'My Appointments',
   'settings',
   'Help Center',
   'Logout',
@@ -14,63 +12,10 @@ const MENU = [
 export default function ProfilePage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(null);
-
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    birthday: '',
-    phone: '',
-    address: '',
-    city: ''
-  });
-
+  const [form, setForm] = useState({ firstName: '', lastName: '', birthday: '', phone: '' });
   const [profileSrc, setProfileSrc] = useState('/defaultProfile.png');
   const fileInputRef = useRef(null);
 
-  // ---------------------------------------
-  //  FETCH USER PROFILE FROM /me
-  // ---------------------------------------
-  useEffect(() => {
-    async function loadProfile() {
-      try {
-        const token = localStorage.getItem("token");
-
-        const res = await fetch(`${API}/me`, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-
-        const data = await res.json();
-        if (!data.user) return;
-
-        const u = data.user;
-
-        // fill form
-        setForm({
-          firstName: u.name?.split(" ")[0] || "",
-          lastName: u.name?.split(" ")[1] || "",
-          birthday: u.birth_date || "",
-          phone: u.phone || "",
-          address: u.address || "",
-          city: u.city || ""
-        });
-
-        // set profile picture
-        if (u.profile_picture) {
-          setProfileSrc(`${API}/uploads/${u.profile_picture}`);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    loadProfile();
-  }, []);
-
-  // ---------------------------------------
-  //  FORM HANDLING
-  // ---------------------------------------
   function handleMenuClick(i) {
     setActiveIndex(i);
   }
@@ -81,48 +26,24 @@ export default function ProfilePage() {
   }
 
   function onReset() {
-    setForm({ firstName: '', lastName: '', birthday: '', phone: '', address: '', city: '' });
+    setForm({ firstName: '', lastName: '', birthday: '', phone: '' });
   }
 
   function onSave(e) {
-    e.preventDefault();
-    alert("Saving profile data is not implemented yet (only front-end)");
+    e?.preventDefault();
+    console.log('Saved (front-end only):', form);
+    alert('Form saved (front-end only)');
   }
 
-  // ---------------------------------------
-  //  PROFILE PICTURE UPLOAD
-  // ---------------------------------------
   function onChangeProfileClick() {
     fileInputRef.current?.click();
   }
 
-  async function onProfileSelected(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const token = localStorage.getItem("token");
-
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("email", form.email); // or user ID if needed
-
-    try {
-      const res = await fetch(`${API}/change-profile-picture`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-        body: formData
-      });
-
-      const data = await res.json();
-      if (data.file) {
-        setProfileSrc(`${API}/uploads/${data.file}`);
-      }
-
-    } catch (err) {
-      console.error("Upload error:", err);
-    }
+  function onProfileSelected(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    setProfileSrc(url);
   }
 
   return (
@@ -134,7 +55,7 @@ export default function ProfilePage() {
           <span className="plus">Plus+</span>
         </div>
         <ul className="nav-links">
-          <li><a href="/home">Home</a></li>
+          <li><a href="#">Home</a></li>
           <li><a href="#">About Us</a></li>
           <li><a href="#">Profile</a></li>
           <li><a href="#">Contact</a></li>
@@ -179,6 +100,7 @@ export default function ProfilePage() {
           <div className="pp-profile-wrap">
             <div className="pp-avatar-holder">
               <img className="pp-avatar" src={profileSrc} alt="profile" />
+
             </div>
 
             <button className="pp-change-btn" onClick={onChangeProfileClick}>Change</button>
@@ -210,16 +132,6 @@ export default function ProfilePage() {
             <label className="pp-field">
               <div className="pp-label">Phone number</div>
               <input name="phone" value={form.phone} onChange={handleChange} />
-            </label>
-
-            <label className="pp-field">
-              <div className="pp-label">Address</div>
-              <input name="address" value={form.address} onChange={handleChange} />
-            </label>
-
-            <label className="pp-field">
-              <div className="pp-label">City</div>
-              <input name="city" value={form.city} onChange={handleChange} />
             </label>
 
             <div className="pp-actions">

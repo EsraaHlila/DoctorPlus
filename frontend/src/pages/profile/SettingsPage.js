@@ -3,7 +3,7 @@ import "./SettingsPage.css";
 
 const MENU = [
   "My Profile",
-  "Activity History",
+  "My Appointments",
   "Settings",
   "Help Center",
   "Logout",
@@ -15,6 +15,10 @@ export default function SettingsPage() {
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // NEW STATES (added)
+  const [showFinalDeleteModal, setShowFinalDeleteModal] = useState(false);
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -74,7 +78,7 @@ export default function SettingsPage() {
 
         <main className="settings-main">
           <h1 className="settings-title">Settings</h1>
-          <p className="settings-subtitle">Manage your account settings below.</p>
+          <p className="settings-subtitle">Manage your account settings below</p>
 
           <div className="settings-card">
 
@@ -153,28 +157,26 @@ export default function SettingsPage() {
       {showDeleteModal && (
         <div className="modal-overlay">
           <div className="modal-box">
-          <h2 className="modal-title">Tell us why you're leaving</h2>
-
+            <h2 className="modal-title">Tell us why you're leaving</h2>
 
             <div className="da-radio-group">
-  <label>
-    <input type="radio" name="reason" />
-    I’m getting too many emails
-  </label>
-  <label>
-    <input type="radio" name="reason" />
-    I accidentally made another account
-  </label>
-  <label>
-    <input type="radio" name="reason" />
-    I'm concerned about privacy
-  </label>
-  <label>
-    <input type="radio" name="reason" />
-    Other
-  </label>
-</div>
-
+              <label>
+                <input type="radio" name="reason" />
+                I’m getting too many emails
+              </label>
+              <label>
+                <input type="radio" name="reason" />
+                I accidentally made another account
+              </label>
+              <label>
+                <input type="radio" name="reason" />
+                I'm concerned about privacy
+              </label>
+              <label>
+                <input type="radio" name="reason" />
+                Other
+              </label>
+            </div>
 
             <div className="modal-buttons">
               <button
@@ -188,12 +190,55 @@ export default function SettingsPage() {
                 className="btn-confirm"
                 onClick={() => {
                   setShowDeleteModal(false);
-                  alert("Account deletion request sent!");
+                  setShowFinalDeleteModal(true); 
                 }}
               >
-                Send email
+                Continue 
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showFinalDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+
+            <h2 className="modal-title" style={{ textAlign: "center" }}>
+              Delete the Account
+            </h2>
+
+            <label className="modal-label">Enter password</label>
+            <input
+              type={showDeletePassword ? "text" : "password"}
+              className="modal-input"
+            />
+
+            <div className="checkbox-row">
+              <input
+                type="checkbox"
+                id="deletePwCheck"
+                checked={showDeletePassword}
+                onChange={() => setShowDeletePassword(!showDeletePassword)}
+              />
+              <label htmlFor="deletePwCheck" className="checkbox-label">
+                Show password
+              </label>
+            </div>
+
+            <div className="modal-buttons">
+              <button
+                className="btn-cancel"
+                onClick={() => setShowFinalDeleteModal(false)}
+              >
+                Cancel
+              </button>
+
+              <button className="btn-danger">
+                Delete
+              </button>
+            </div>
+
           </div>
         </div>
       )}

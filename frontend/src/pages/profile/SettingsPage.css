@@ -307,3 +307,49 @@
 .da-radio-group input[type="radio"] {
   accent-color: #1366d6; 
 }
+.modal-box.mini,
+.da-box.mini {
+  width: 360px !important;
+  padding: 22px !important;
+  border-radius: 18px !important;
+}
+
+.modal-title.mini,
+.da-title.mini {
+  font-size: 20px !important;
+  margin-bottom: 15px !important;
+}
+
+.modal-input.mini {
+  padding: 10px !important;
+  font-size: 14px !important;
+  border-radius: 10px !important;
+}
+
+.checkbox-row.mini {
+  margin-top: -5px !important;
+  margin-bottom: 10px !important;
+}
+
+.modal-buttons.mini button,
+.da-btn-confirm.mini,
+.da-btn-cancel.mini {
+  padding: 10px 20px !important;
+  font-size: 14px !important;
+  border-radius: 10px !important;
+}
+
+.da-radio-group.mini label {
+  font-size: 14px !important;
+}
+.btn-danger {
+  padding: 12px 26px;
+  border-radius: 12px;
+  border: none;
+  background: #ff4a4a;    
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(255, 74, 74, 0.18);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
