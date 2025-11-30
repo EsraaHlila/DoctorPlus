@@ -66,8 +66,8 @@ export default function SettingsPage() {
 
         <main className="settings-main">
 
-          <h1 className="settings-title">Help Center</h1>
-          <p className="settings-subtitle">Find answers and get support instantly</p>
+          <h1 className="settings-title">My appointments</h1>
+          <p className="settings-subtitle">Review upcoming and past appointments</p>
           <div className="settings-card">
 
             <div
@@ -75,7 +75,7 @@ export default function SettingsPage() {
               onClick={() => setShowPrivacyPolicy(true)}
             >
               <div>
-                <h3 className="row-title">Privacy Policy</h3>
+                <h3 className="row-title">Previews</h3>
               </div>
               <span className="arrow">›</span>
             </div>
@@ -85,7 +85,7 @@ export default function SettingsPage() {
               onClick={() => setShowHelpPopup(true)}
             >
               <div>
-                <h3 className="row-title">Help</h3>
+                <h3 className="row-title">Active</h3>
               </div>
               <span className="arrow">›</span>
             </div>
