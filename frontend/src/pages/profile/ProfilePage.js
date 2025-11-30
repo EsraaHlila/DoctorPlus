@@ -3,7 +3,7 @@ import './ProfilePage.css';
 
 const MENU = [
   'My Profile',
-  'Activity History',
+  'My Appointments',
   'settings',
   'Help Center',
   'Logout',
