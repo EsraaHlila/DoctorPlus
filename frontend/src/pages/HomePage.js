@@ -1,11 +1,11 @@
 import React from "react";
 import "./HomePage.css";
 import doctorBg from "../doctor-bg.jpg";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   return (
     <div className="homepage">
-      {/* Navbar */}
       <nav className="navbar">
         <div className="logo">
           <span className="brand">Doctor</span>
@@ -19,18 +19,16 @@ function HomePage() {
         </ul>
       </nav>
 
-      {/* Hero Section */}
       <section
         className="hero"
         style={{ backgroundImage: `url(${doctorBg})` }}
       >
         <div className="hero-overlay">
           <div className="hero-content">
-            <h1>Book Your Doctor Appointment Online</h1>
+            <h1>Book Your Doctor 
+              Appointment Online</h1>
             <p>
               A Healthier Tomorrow Starts Today — Schedule Your Appointment!
-              <br />
-              Your Wellness, Our Expertise: Set Up Your Appointment Today.
             </p>
             <div className="buttons">
               <button className="btn primary">Book an Appointment</button>
@@ -40,10 +38,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Schedule Section */}
       <section className="schedule-section">
         <div className="schedule-cards">
-          {/* Working Hours */}
           <div className="schedule-card">
             <h3>Working Hours</h3>
             <ul>
@@ -52,8 +48,6 @@ function HomePage() {
               <li>Sunday: Closed</li>
             </ul>
           </div>
-
-          {/* Appointments History */}
           <div className="schedule-card">
             <h3>Appointments History</h3>
             <ul>

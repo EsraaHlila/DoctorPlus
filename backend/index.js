@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const cors = require('cors');
-
+const multer = require('multer');
 
 
 const app = express();
@@ -28,7 +28,7 @@ const pool = new Pool({
 
 
 
-const multer = require('multer');
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
@@ -81,61 +81,65 @@ app.get('/', (req, res) => {
 //register route
 app.post('/register', async (req, res) => {
   try {
-    const { name, email, password, /*role='patient',*/ city, /*available = false*/ phone_number, address } = req.body;
+    console.log("Request body:", req.body); // DEBUG: check incoming data
 
-    if (!name || !email || !password || !city || !phone_number || !address ) /*!role)*/ {
-          return res.status(400).json({
-            message: 'Missing required fields ',
-          });
-        }
+    const { name, email, password, city, phone_number, address, birth_date } = req.body;
 
+    // Validate all required fields
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !city ||
+      !phone_number ||
+      !address ||
+      !birth_date
+    ) {
+      return res.status(400).json({
+        message: 'Missing required fields.',
+      });
+    }
+
+    // Optional: validate phone number is digits only
+    if (!/^\d+$/.test(phone_number)) {
+      return res.status(400).json({
+        message: 'Phone number must contain only digits.',
+      });
+    }
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // to get the role id from the roles table in order to select a valid role
-    //const roleResult = await pool.query('SELECT id FROM roles WHERE name = $1', [role]);
-
-
-    /*const validRoles = ['admin', 'doctor', 'patient', 'nurse'];
-        if (!validRoles.includes(role)) {
-          return res.status(400).json({
-            message: 'Invalid role selected.',
-            validRoles: validRoles
-          });
-        }*/
-
-
-
+    // Check if email already exists
     const emailCheck = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (emailCheck.rows.length > 0) {
-          return res.status(400).json({
-            message: 'Email already registered. Please use a different email address.',
-          });
-        }
+    if (emailCheck.rows.length > 0) {
+      return res.status(400).json({
+        message: 'Email already registered. Please use a different email address.',
+      });
+    }
 
+    // Insert the user
     const result = await pool.query(
-      'INSERT INTO users (name, email, password, city,phone_number, address) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [name, email, hashedPassword, /*role, available,*/ city, phone_number, address]
+      'INSERT INTO users (name, email, password, city, phone_number, address, birth_date) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [name, email, hashedPassword, city, phone_number, address, birth_date]
     );
 
     res.status(201).json({
       message: 'User registered successfully!',
+      user: result.rows[0],
     });
+
   } catch (err) {
     console.error(err);
 
-    //email already exists error
     if (err.code === '23505') {
-          return res.status(400).json({
-            message: 'Email already exists. Please choose another email.',
-          });
-        }
+      return res.status(400).json({
+        message: 'Email already exists. Please choose another email.',
+      });
+    }
 
-        // a general server error
-        res.status(500).json({
-          message: 'Server error. Please try again later.',
-        });
-
+    res.status(500).json({
+      message: 'Server error. Please try again later.',
+    });
   }
 });
 
@@ -215,7 +219,7 @@ app.get('/me', authenticateToken, async (req, res) => {
     }
 
     const result = await pool.query(
-      'SELECT id, name, email, address, phone_number, city FROM users WHERE id = $1',
+      'SELECT id, name, email, address, phone_number, city,birth_date FROM users WHERE id = $1',
       [req.user.id]
     );
 
@@ -233,6 +237,7 @@ app.get('/me', authenticateToken, async (req, res) => {
         phone: user.phone_number,
         address: user.address,
         city: user.city,
+        birth_date: user.birth_date
       }
     });
   } catch (err) {
@@ -347,7 +352,7 @@ app.put('/change-profile-picture', upload.single('image'), async (req, res) => {
       });
     }
 
-    const filename = req.file.filename;
+    const filename = req.file.filename; // image saved in /uploads/
 
     await pool.query(
       "UPDATE users SET profile_picture = $1 WHERE email = $2",
@@ -356,7 +361,8 @@ app.put('/change-profile-picture', upload.single('image'), async (req, res) => {
 
     res.json({
       message: "Profile picture updated!",
-      file: filename
+      filename: filename,
+      imageUrl: `/uploads/${filename}`
     });
 
   } catch (err) {
@@ -364,6 +370,7 @@ app.put('/change-profile-picture', upload.single('image'), async (req, res) => {
     res.status(500).json({ message: "Server error." });
   }
 });
+
 
 
 

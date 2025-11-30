@@ -4,7 +4,6 @@
   background-color: #f5f7fa;
 }
 
-/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -42,33 +41,40 @@
   color: #0066cc;
 }
 
-/* Hero Section */
 .hero {
-  height: 90vh;
+  height: 80vh;
   background-size: cover;
   background-position: center;
   position: relative;
 }
 
 .hero-overlay {
-  background: rgba(0, 0, 70, 0.7);
+  background: transparent;
   height: 100%;
   display: flex;
-  align-items: center;      /* vertically center content */
-  justify-content: flex-start; /* push content to the left horizontally */
+  align-items: center;
+  justify-content: flex-start;
   text-align: left;
-  padding: 0 2rem;
+  padding: 0 10%; 
+}
+
+.hero-content {
+  max-width: 500px;  
+  margin-left: 0;    
 }
 
 .hero-content h1 {
   font-size: 3rem;
+  line-height: 1.2;
   margin-bottom: 1rem;
-  color: #fff;
+  color: #0066cc;
+  font-weight: 700;
+  text-transform: none;
+  white-space: normal; 
 }
-
 .hero-content p {
   font-size: 1.1rem;
-  color: #e0e0e0;
+  color: #0066cc;
   max-width: 600px;
   margin: 0 auto 2rem;
 }
@@ -76,8 +82,9 @@
 .buttons {
   display: flex;
   gap: 1rem;
-  justify-content: center;
+  justify-content: flex-start;
 }
+
 
 .btn {
   padding: 0.8rem 1.8rem;
@@ -89,39 +96,42 @@
 }
 
 .btn.primary {
-  background-color: #00b4ff;
+  background-color: #0066cc;
+  border: 2px solid #0066cc;
   color: #fff;
 }
 
 .btn.primary:hover {
-  background-color: #0092d8;
+  background-color: #fff;
+  color: #0066cc;
 }
 
 .btn.secondary {
-  background-color: transparent;
-  border: 2px solid #fff;
+  background-color: #00b4ff;
+  border: 2px solid #00b4ff;
   color: #fff;
 }
 
 .btn.secondary:hover {
   background-color: #fff;
-  color: #0066cc;
+  color: #00b4ff;
 }
-/* --- Schedule Section --- */
+
+
 .schedule-section {
   background-color: #ffffff;
-  padding: 80px 10%;
+  padding: 30px 10%;
 }
 
 .schedule-cards {
   display: flex;
   justify-content: center;
-  gap: 40px;
+  gap: 60px;
   flex-wrap: wrap;
 }
 
 .schedule-card {
-  background-color: #dbeafe;
+  background-color: #84deff;
   padding: 30px;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(30, 64, 175, 0.15);
@@ -132,7 +142,7 @@
 
 .schedule-card h3 {
   font-size: 1.5rem;
-  color: #1e3a8a;
+  color: #00185b;
   margin-bottom: 20px;
 }
 
@@ -146,3 +156,5 @@
   color: #334155;
   margin-bottom: 10px;
 }
+
+

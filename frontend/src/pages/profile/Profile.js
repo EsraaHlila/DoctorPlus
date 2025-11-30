@@ -1,252 +1,147 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./profile.css";
 
-function Profile() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    phone_number: "",
-    city: "",
-    address: "",
-  });
+import React, { useState, useRef } from 'react';
+import './ProfilePage.css';
 
-  const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+const MENU = [
+  'My Profile',
+  'Activity History',
+  'settings',
+  'Help Center',
+  'Logout',
+];
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-          navigate("/error_signin");
-          return;
-        }
+export default function ProfilePage() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [hoverIndex, setHoverIndex] = useState(null);
+  const [form, setForm] = useState({ firstName: '', lastName: '', birthday: '', phone: '' });
+  const [profileSrc, setProfileSrc] = useState('/defaultProfile.png');
+  const fileInputRef = useRef(null);
 
-        const response = await fetch("http://localhost:8000/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+  function handleMenuClick(i) {
+    setActiveIndex(i);
+  }
 
-        if (response.status === 401) {
-          navigate("/error_signin");
-          return;
-        }
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Erreur lors du chargement du profil");
-        }
-
-        setUser({
-          name: data.user.name || "",
-          email: data.user.email || "",
-          phone_number: data.user.phone || "",
-          city: data.user.city || "",
-          address: data.user.address || "",
-        });
-      } catch (err) {
-        console.error(err);
-        setError("Impossible de charger le profil.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [navigate]);
-
-  const handleChange = (e) => {
+  function handleChange(e) {
     const { name, value } = e.target;
-    setUser((prev) => ({ ...prev, [name]: value }));
-  };
+    setForm(prev => ({ ...prev, [name]: value }));
+  }
 
-  const handleSave = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setError("");
+  function onReset() {
+    setForm({ firstName: '', lastName: '', birthday: '', phone: '' });
+  }
 
-    try {
-      const token = localStorage.getItem("accessToken");
-      const response = await fetch("http://localhost:8000/me/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(user),
-      });
+  function onSave(e) {
+    e?.preventDefault();
+    console.log('Saved (front-end only):', form);
+    alert('Form saved (front-end only)');
+  }
 
-      const data = await response.json();
+  function onChangeProfileClick() {
+    fileInputRef.current?.click();
+  }
 
-      if (!response.ok) {
-        throw new Error(data.message || "Erreur lors de la mise à jour");
-      }
-
-      setMessage("Profil mis à jour avec succès !");
-      setEditing(false);
-    } catch (err) {
-      console.error(err);
-      setError("Une erreur est survenue. Réessayez plus tard.");
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!window.confirm("Êtes-vous sûr de vouloir supprimer votre compte ?")) {
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem("accessToken");
-      const response = await fetch("http://localhost:8000/me/delete", {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.message || "Erreur lors de la suppression du compte.");
-        return;
-      }
-
-      alert("Compte supprimé avec succès !");
-      localStorage.clear();
-      navigate("/");
-    } catch (err) {
-      console.error(err);
-      alert("Une erreur est survenue. Réessayez plus tard.");
-    }
-  };
-
-  if (loading) {
-    return <div className="profile-container">Chargement du profil...</div>;
+  function onProfileSelected(e) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    setProfileSrc(url);
   }
 
   return (
-    <div className="profile-page">
-      {/* HEADER */}
-      <header className="doctorplus-header">
-        <div className="logo">DoctorPlus+</div>
-        <nav>
-          <a href="/home">Home</a>
-          <a href="#">About Us</a>
-          <a href="#">Services</a>
-          <a href="#" className="active">
-            Profile
-          </a>
-          <a href="#">Contact</a>
-        </nav>
-      </header>
+    <div className="pp-container">
 
-      {/* BACKGROUND + FORM */}
-      <div className="profile-hero">
-        <div className="overlay"></div>
-        <div className="profile-form-container">
-          <h1>Mon Profil</h1>
-          <p>Gérez vos informations personnelles</p>
+      <nav className="navbar">
+        <div className="logo">
+          <span className="brand">Doctor</span>
+          <span className="plus">Plus+</span>
+        </div>
+        <ul className="nav-links">
+          <li><a href="/home">Home</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
 
-          {error && <div className="message error">{error}</div>}
-          {message && <div className="message success">{message}</div>}
+      <div className="pp-body">
+        <aside className="pp-sidebar">
+          {MENU.map((label, i) => {
+            const active = i === activeIndex;
+            const hovering = i === hoverIndex;
 
-          <form onSubmit={handleSave} className="profile-form">
-            <div className="form-row">
-              <input
-                type="text"
-                name="name"
-                placeholder="Nom complet"
-                value={user.name}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="Adresse email"
-                value={user.email}
-                onChange={handleChange}
-                disabled={!editing}
-              />
+            return (
+              <div
+                key={label}
+                className={`pp-menu-item ${active ? 'active' : ''} ${hovering && !active ? 'hover' : ''}`}
+                onClick={() => handleMenuClick(i)}
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(null)}
+              >
+                <img
+                  className="pp-dot-img"
+                  src={
+                    i === 0 ? "/user.png" :
+                    i === 1 ? "/history.png" :
+                    i === 2 ? "/cogwheel.png" :
+                    i === 3 ? "/question.png" :
+                    "/logout.png"
+                  }
+                  alt=""
+                />
+
+                <span className="pp-menu-text">{label}</span>
+              </div>
+            );
+          })}
+        </aside>
+
+        <main className="pp-main">
+          <h1 className="pp-title">Edit profile</h1>
+
+          <div className="pp-profile-wrap">
+            <div className="pp-avatar-holder">
+              <img className="pp-avatar" src={profileSrc} alt="profile" />
+
             </div>
 
-            <div className="form-row">
-              <input
-                type="text"
-                name="phone_number"
-                placeholder="Numéro de téléphone"
-                value={user.phone_number}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-              <input
-                type="text"
-                name="city"
-                placeholder="Ville"
-                value={user.city}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-            </div>
+            <button className="pp-change-btn" onClick={onChangeProfileClick}>Change</button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={onProfileSelected}
+              style={{ display: 'none' }}
+            />
+          </div>
 
-            <div className="form-row">
-              <input
-                type="text"
-                name="address"
-                placeholder="Adresse"
-                value={user.address}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-            </div>
+          <form className="pp-form" onSubmit={onSave}>
+            <label className="pp-field">
+              <div className="pp-label">First name</div>
+              <input name="firstName" value={form.firstName} onChange={handleChange} />
+            </label>
 
-            <div className="profile-actions">
-              {!editing ? (
-                <button
-                  type="button"
-                  onClick={() => setEditing(true)}
-                  className="btn-primary"
-                >
-                  Modifier le profil
-                </button>
-              ) : (
-                <div className="edit-actions">
-                  <button type="submit" className="btn-primary">
-                    Enregistrer
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEditing(false)}
-                    className="btn-secondary"
-                  >
-                    Annuler
-                  </button>
-                </div>
-              )}
+            <label className="pp-field">
+              <div className="pp-label">Last name</div>
+              <input name="lastName" value={form.lastName} onChange={handleChange} />
+            </label>
+
+            <label className="pp-field">
+              <div className="pp-label">Birthday</div>
+              <input name="birthday" value={form.birthday} onChange={handleChange} placeholder="YYYY-MM-DD" />
+            </label>
+
+            <label className="pp-field">
+              <div className="pp-label">Phone number</div>
+              <input name="phone" value={form.phone} onChange={handleChange} />
+            </label>
+
+            <div className="pp-actions">
+              <button type="button" className="pp-reset" onClick={onReset}>Reset</button>
+              <button type="submit" className="pp-save">Save</button>
             </div>
           </form>
-
-          <div className="auth-buttons">
-            <button onClick={handleLogout} className="btn-logout">
-              Se déconnecter
-            </button>
-            <button onClick={handleDeleteAccount} className="btn-delete">
-              Supprimer mon compte
-            </button>
-          </div>
-        </div>
+        </main>
       </div>
     </div>
   );
 }
-
-export default Profile;

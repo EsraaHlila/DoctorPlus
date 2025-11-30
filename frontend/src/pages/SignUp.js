@@ -1,85 +1,172 @@
 import React, { useState } from "react";
+import bgImage from '../your-image.jpg';
+import "./SignUp.css";
 import { Link } from "react-router-dom";
-import "./auth.css";
 
-function SignUp() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [city, setCity] = useState("");
-  const [phone_number, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
+export default function SignUp() {
+
+  const [formData, setFormData] = useState({
+    name: "",
+    phone_number: "",
+    email: "",
+    password: "",
+    birth_date: "",
+    city: "",
+    address: ""
+  });
+
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
-  const handleSubmit = async (e) => {
+  function handleChange(e) {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!name || !email || !password || !city || !phone_number || !address) {
-      setError("Veuillez remplir tous les champs !");
+    // Frontend validation
+    const { name, phone_number, email, password, birth_date, city, address } = formData;
+
+    if (!name || !phone_number || !email || !password || !birth_date || !city || !address) {
+      setError("Please fill in all fields.");
       return;
     }
 
-    setError("");
-    setSuccess("");
+    if (!/^\d+$/.test(phone_number)) {
+      setError("Phone number must contain only digits.");
+      return;
+    }
+
+    setError(""); // clear error if validation passed
 
     try {
-      const response = await fetch("http://localhost:8000/register", {
+      const res = await fetch("http://localhost:8000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          city,
-          phone_number,
-          address,
-        }),
+        body: JSON.stringify(formData)
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
-        setError(data.message || "Une erreur est survenue.");
+      if (res.ok) {
+        alert("Account created successfully!");
+        window.location.href = "/"; // Redirect to Sign In
       } else {
-        setSuccess("Compte créé avec succès ✅");
-        setName("");
-        setEmail("");
-        setPassword("");
-        setCity("");
-        setPhoneNumber("");
-        setAddress("");
+        setError(data.message || "Registration failed");
       }
+
     } catch (err) {
-      setError("Erreur de connexion au serveur.");
+      console.error(err);
+      setError("Server error. Please try again later.");
     }
-  };
+  }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2 className="auth-title">🩺 DoctorPlus</h2>
-        <p className="auth-subtitle">Créer un nouveau compte</p>
-        <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="Nom complet" value={name} onChange={(e) => setName(e.target.value)} />
-          <input type="email" placeholder="Adresse email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <input type="text" placeholder="Ville" value={city} onChange={(e) => setCity(e.target.value)} />
-          <input type="text" placeholder="Numéro de téléphone" value={phone_number} onChange={(e) => setPhoneNumber(e.target.value)} />
-          <input type="text" placeholder="Adresse" value={address} onChange={(e) => setAddress(e.target.value)} />
+    <div className="login-container">
 
-          {error && <p className="error-text">{error}</p>}
-          {success && <p className="success-text">{success}</p>}
+      <div className="left-side">
+        <img src={bgImage} alt="Background" className="left-image" />
+        <div className="left-overlay">
+          <h2 className="new">Welcome!</h2>
+          <p className="welcome-title">If you already have an account, please sign in below</p>
 
-          <button type="submit">S'inscrire</button>
+          <Link to="/">
+            <button className="btn-login-left">Sign In</button>
+          </Link>
+        </div>
+      </div>
+
+      <div className="right-side">
+
+        <div className="logo">
+          <span className="brand">Doctor</span>
+          <span className="plus">Plus+</span>
+        </div>
+
+        <h2 className="login-title">Sign Up For An Account</h2>
+
+        <form className="login-form" onSubmit={handleSubmit}>
+
+          <div className="input-group">
+            <input
+              name="name"
+              type="text"
+              placeholder="Full Name"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <input
+              name="phone_number"
+              type="tel"
+              placeholder="Phone Number"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <input
+              name="birth_date"
+              type="date"
+              placeholder="Birth Date"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <input
+              name="city"
+              type="text"
+              placeholder="City"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-group">
+            <input
+              name="address"
+              type="text"
+              placeholder="Address"
+              onChange={handleChange}
+            />
+          </div>
+
+          <label className="terms-box">
+            <input type="checkbox" /> I accept the Terms & Conditions
+          </label>
+
+          {error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
+
+          <button className="btn-login">Sign Up</button>
+
+          <p className="or-text">Or sign up using</p>
+
+          <div className="social-buttons">
+            <img src="google.png" alt="Google" className="social-icon" />
+            <img src="facebook.png" alt="Facebook" className="social-icon" />
+            <img src="twitter.png" alt="Twitter" className="social-icon" />
+          </div>
         </form>
-
-        <p className="switch-text">
-          Déjà inscrit ? <Link to="/">Se connecter</Link>
-        </p>
       </div>
     </div>
   );
 }
-
-export default SignUp;

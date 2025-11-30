@@ -1,27 +1,24 @@
 import React, { useState } from "react";
+import bgImage from '../your-image.jpg';
+import "./SignIn.css";
 import { Link, useNavigate } from "react-router-dom";
-import "./auth.css";
 
-function SignIn() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const navigate = useNavigate(); // for redirecting after login
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!email || !password) {
-      setError("Veuillez remplir tous les champs !");
+      setError("Please fill in all fields.");
       return;
     }
 
     try {
-      setError("");
-      setSuccess("");
-
-      // 🧩 Send request to backend
       const response = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,55 +28,94 @@ function SignIn() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Erreur de connexion.");
+        setError(data.message || "Invalid credentials.");
         return;
       }
 
-      // ✅ Login successful
-      setSuccess("Connexion réussie ");
+      // Save tokens if your backend returns them
+      localStorage.setItem("accessToken", data.accessToken || "");
+      localStorage.setItem("refreshToken", data.refreshToken || "");
+      localStorage.setItem("user", JSON.stringify(data.user || {}));
 
-      // Save token to localStorage (for future authenticated requests)
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // Redirect to dashboard or home page (you can change the route)
-      setTimeout(() => navigate("/home"), 1500);
+      navigate("/home"); // redirect on success
 
     } catch (err) {
-      console.error("Erreur de connexion :", err);
-      setError("Une erreur est survenue. Réessayez plus tard.");
+      console.error(err);
+      setError("Server error. Try again later.");
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2 className="auth-title"> DoctorPlus</h2>
-        <p className="auth-subtitle">Connectez-vous à votre espace</p>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Adresse email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Mot de passe"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && <p className="error-text">{error}</p>}
-          {success && <p className="success-text">{success}</p>}
-          <button type="submit">Se connecter</button>
+    <div className="login-container">
+      <div className="left-side">
+        <img
+          src={bgImage}
+          alt="Background"
+          className="left-image"
+        />
+        <div className="left-overlay">
+          <h2 className="new">Welcome!</h2>
+          <p className="welcome-title">New Here? Sign Up and Reserve Your Appointment</p>
+
+          <Link to="/signup">
+            <button className="btn-login-left">Sign Up</button>
+          </Link>
+        </div>
+      </div>
+
+      <div className="right-side">
+
+        <div className="logo">
+          <span className="brand">Doctor</span>
+          <span className="plus">Plus+</span>
+        </div>
+
+        <h2 className="login-title">Log In To Your Account</h2>
+
+        <form className="login-form" onSubmit={handleLogin}>
+          <div className="input-group">
+            <input
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="options">
+            <label>
+              <input type="checkbox" /> Show my password
+            </label>
+            <a href="#" className="forgot">Forgot Password?</a>
+          </div>
+
+          <button type="submit" className="btn-login">Sign In</button>
+
+          {/* Error message below button */}
+          {error && (
+            <p style={{ color: "red", marginTop: "10px", fontSize: "0.9rem" }}>
+              {error}
+            </p>
+          )}
+
+          <p className="or-text">Or sign in using</p>
+          <div className="social-buttons">
+            <img src="google.png" alt="Google" className="social-icon" />
+            <img src="facebook.png" alt="Facebook" className="social-icon" />
+            <img src="twitter.png" alt="Twitter" className="social-icon" />
+          </div>
+
         </form>
-        <p className="switch-text">
-          Pas encore inscrit ? <Link to="/signup">Créer un compte</Link>
-        </p>
       </div>
     </div>
   );
 }
-
-export default SignIn;
