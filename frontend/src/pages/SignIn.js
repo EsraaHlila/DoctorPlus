@@ -1,13 +1,27 @@
 import React, { useState } from "react";
 import bgImage from '../your-image.jpg';
 import "./SignIn.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      navigate("/home");   // redirect logged in users
+    }
+  }, []);
+
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -70,7 +84,7 @@ export default function Login() {
           <span className="plus">Plus+</span>
         </div>
 
-        <h2 className="login-title">Log In To Your Account</h2>
+        <h2 className="login-title">Sign In To Your Account</h2>
 
         <form className="login-form" onSubmit={handleLogin}>
           <div className="input-group">
@@ -84,7 +98,7 @@ export default function Login() {
 
           <div className="input-group">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -93,10 +107,15 @@ export default function Login() {
 
           <div className="options">
             <label>
-              <input type="checkbox" /> Show my password
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+              /> Show my password
             </label>
-            <a href="#" className="forgot">Forgot Password?</a>
+            <a href="forgot-password" className="forgot">Forgot Password?</a>
           </div>
+
 
           <button type="submit" className="btn-login">Sign In</button>
 
@@ -113,6 +132,11 @@ export default function Login() {
             <img src="facebook.png" alt="Facebook" className="social-icon" />
             <img src="twitter.png" alt="Twitter" className="social-icon" />
           </div>
+
+          <p style={{ marginTop: "20px", textAlign: "center" }}>
+            <Link to="/about-us" style={{ color: "#007bff" }}>About Us</Link>
+          </p>
+
 
         </form>
       </div>

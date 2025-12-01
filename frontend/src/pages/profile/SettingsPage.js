@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./SettingsPage.css";
+import { useNavigate } from "react-router-dom";
 
 const MENU = [
   "My Profile",
@@ -9,23 +10,110 @@ const MENU = [
   "Logout",
 ];
 
+const API = "http://localhost:8000";
+
 export default function SettingsPage() {
+  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(2);
   const [hoverIndex, setHoverIndex] = useState(null);
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // NEW STATES (added)
   const [showFinalDeleteModal, setShowFinalDeleteModal] = useState(false);
   const [showDeletePassword, setShowDeletePassword] = useState(false);
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+
+  function handleMenuClick(i) {
+    setActiveIndex(i);
+    if (i === 0) navigate("/profile");
+    if (i === 1) navigate("/appointments");
+    if (i === 2) navigate("/settings");
+    if (i === 3) navigate("/help");
+    if (i === 4) {
+      localStorage.removeItem("accessToken");
+      navigate("/");
+    }
+  }
+
+  // -----------------------------
+  // CHANGE PASSWORD
+  // -----------------------------
+  async function handleChangePassword() {
+    const token = localStorage.getItem("accessToken");
+    //const email = localStorage.getItem("email"); // make sure email is stored on login
+    if (!token) return alert("No token or email found!");
+
+    try {
+      const res = await fetch(`${API}/change-password`, {
+        method: "PUT", // matches your backend method
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            oldPassword: oldPassword,   // camelCase as backend expects
+            newPassword: newPassword
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Password changed successfully!");
+        setShowPasswordModal(false);
+        setOldPassword("");
+        setNewPassword("");
+      } else {
+        alert(data.message || "Error changing password");
+      }
+    } catch (err) {
+      console.error("Change password error:", err);
+      alert("Server error while changing password");
+    }
+  }
+
+
+  // -----------------------------
+  // DELETE ACCOUNT
+  // -----------------------------
+  async function handleDeleteAccount() {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return alert("No token found!");
+
+    try {
+      const res = await fetch(`${API}/me/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          password: deletePassword
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Account deleted successfully!");
+        localStorage.removeItem("accessToken");
+        navigate("/");
+      } else {
+        alert(data.message || "Error deleting account");
+      }
+    } catch (err) {
+      console.error("Delete account error:", err);
+      alert("Server error while deleting account");
+    }
+  }
+
   return (
     <div className="pp-container">
-
       <nav className="navbar">
         <div className="logo">
           <span className="brand">Doctor</span>
@@ -33,14 +121,13 @@ export default function SettingsPage() {
         </div>
         <ul className="nav-links">
           <li><a href="/home">Home</a></li>
-          <li><a href="/about">About Us</a></li>
+          <li><a href="about-us">About Us</a></li>
           <li><a href="/profile">Profile</a></li>
-          <li><a href="/contact">Contact</a></li>
+          <li><a href="#">Contact</a></li>
         </ul>
       </nav>
 
       <div className="pp-body">
-
         <aside className="pp-sidebar">
           {MENU.map((label, i) => {
             const active = i === activeIndex;
@@ -48,25 +135,19 @@ export default function SettingsPage() {
             return (
               <div
                 key={label}
-                onClick={() => setActiveIndex(i)}
+                onClick={() => handleMenuClick(i)}
                 onMouseEnter={() => setHoverIndex(i)}
                 onMouseLeave={() => setHoverIndex(null)}
-                className={`pp-menu-item ${active ? "active" : ""} ${
-                  !active && hover ? "hover" : ""
-                }`}
+                className={`pp-menu-item ${active ? "active" : ""} ${!active && hover ? "hover" : ""}`}
               >
                 <img
                   className="pp-dot-img"
                   src={
-                    i === 0
-                      ? "/user.png"
-                      : i === 1
-                      ? "/history.png"
-                      : i === 2
-                      ? "/cogwheel.png"
-                      : i === 3
-                      ? "/question.png"
-                      : "/logout.png"
+                    i === 0 ? "/user.png" :
+                    i === 1 ? "/history.png" :
+                    i === 2 ? "/cogwheel.png" :
+                    i === 3 ? "/question.png" :
+                    "/logout.png"
                   }
                   alt=""
                 />
@@ -81,7 +162,6 @@ export default function SettingsPage() {
           <p className="settings-subtitle">Manage your account settings below</p>
 
           <div className="settings-card">
-
             <div className="settings-row" onClick={() => setShowPasswordModal(true)}>
               <div>
                 <h3 className="row-title">Change Password</h3>
@@ -97,11 +177,11 @@ export default function SettingsPage() {
               </div>
               <span className="arrow">›</span>
             </div>
-
           </div>
         </main>
       </div>
 
+      {/* CHANGE PASSWORD MODAL */}
       {showPasswordModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -111,6 +191,8 @@ export default function SettingsPage() {
             <input
               type={showOldPassword ? "text" : "password"}
               className="modal-input"
+              value={oldPassword}
+              onChange={e => setOldPassword(e.target.value)}
             />
             <div className="checkbox-row">
               <input
@@ -128,6 +210,8 @@ export default function SettingsPage() {
             <input
               type={showNewPassword ? "text" : "password"}
               className="modal-input"
+              value={newPassword}
+              onChange={e => setNewPassword(e.target.value)}
             />
             <div className="checkbox-row">
               <input
@@ -148,12 +232,18 @@ export default function SettingsPage() {
               >
                 Cancel
               </button>
-              <button className="btn-confirm">Change Password</button>
+              <button
+                className="btn-confirm"
+                onClick={handleChangePassword}
+              >
+                Change Password
+              </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* DELETE ACCOUNT MODAL */}
       {showDeleteModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -190,20 +280,20 @@ export default function SettingsPage() {
                 className="btn-confirm"
                 onClick={() => {
                   setShowDeleteModal(false);
-                  setShowFinalDeleteModal(true); 
+                  setShowFinalDeleteModal(true);
                 }}
               >
-                Continue 
+                Continue
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* FINAL DELETE MODAL */}
       {showFinalDeleteModal && (
         <div className="modal-overlay">
           <div className="modal-box">
-
             <h2 className="modal-title" style={{ textAlign: "center" }}>
               Delete the Account
             </h2>
@@ -212,6 +302,8 @@ export default function SettingsPage() {
             <input
               type={showDeletePassword ? "text" : "password"}
               className="modal-input"
+              value={deletePassword}
+              onChange={e => setDeletePassword(e.target.value)}
             />
 
             <div className="checkbox-row">
@@ -234,15 +326,16 @@ export default function SettingsPage() {
                 Cancel
               </button>
 
-              <button className="btn-danger">
+              <button
+                className="btn-danger"
+                onClick={handleDeleteAccount}
+              >
                 Delete
               </button>
             </div>
-
           </div>
         </div>
       )}
-
     </div>
   );
 }

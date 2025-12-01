@@ -2,9 +2,24 @@ import React, { useState } from "react";
 import bgImage from '../your-image.jpg';
 import "./SignUp.css";
 import { Link } from "react-router-dom";
+import  {  useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+
+
+
 
 export default function SignUp() {
+const navigate = useNavigate();
+const [acceptedTerms, setAcceptedTerms] = useState(false);
+const [termsError, setTermsError] = useState("");
 
+
+useEffect(() => {
+  if (localStorage.getItem("accessToken")) {
+    navigate("/home");
+  }
+}, []);
   const [formData, setFormData] = useState({
     name: "",
     phone_number: "",
@@ -21,45 +36,69 @@ export default function SignUp() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+async function handleSubmit(e) {
+  e.preventDefault();
 
-    // Frontend validation
-    const { name, phone_number, email, password, birth_date, city, address } = formData;
+  const { name, phone_number, email, password, birth_date, city, address } = formData;
 
-    if (!name || !phone_number || !email || !password || !birth_date || !city || !address) {
-      setError("Please fill in all fields.");
-      return;
-    }
+  // Check empty fields
+  if (!name || !phone_number || !email || !password || !birth_date || !city || !address) {
+    setError("Please fill in all fields.");
+    return;
+  }
 
-    if (!/^\d+$/.test(phone_number)) {
-      setError("Phone number must contain only digits.");
-      return;
-    }
+  // Validate phone number
+  if (!/^\d+$/.test(phone_number)) {
+    setError("Phone number must contain only digits.");
+    return;
+  }
 
-    setError(""); // clear error if validation passed
+  // Validate Terms
+  if (!acceptedTerms) {
+    setTermsError("You must accept the Terms & Conditions.");
+    return;
+  }
 
-    try {
-      const res = await fetch("http://localhost:8000/register", {
+  setError("");
+  setTermsError("");
+
+  try {
+    const res = await fetch("http://localhost:8000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      // Auto login
+      const loginRes = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ email: formData.email, password: formData.password })
       });
 
-      const data = await res.json();
+      const loginData = await loginRes.json();
 
-      if (res.ok) {
-        alert("Account created successfully!");
-        window.location.href = "/"; // Redirect to Sign In
+      if (loginRes.ok) {
+        localStorage.setItem("accessToken", loginData.accessToken);
+        localStorage.setItem("refreshToken", loginData.refreshToken);
+        localStorage.setItem("user", JSON.stringify(loginData.user));
+        navigate("/home");
       } else {
-        setError(data.message || "Registration failed");
+        navigate("/");
       }
 
-    } catch (err) {
-      console.error(err);
-      setError("Server error. Please try again later.");
+    } else {
+      setError(data.message || "Registration failed");
     }
+
+  } catch (err) {
+    console.error(err);
+    setError("Server error. Please try again later.");
   }
+}
 
   return (
     <div className="login-container">
@@ -73,6 +112,12 @@ export default function SignUp() {
           <Link to="/">
             <button className="btn-login-left">Sign In</button>
           </Link>
+          <Link to="/about-us">
+            <p style={{ marginTop: "15px", color: "white", textDecoration: "underline", cursor: "pointer" }}>
+              About Us
+            </p>
+          </Link>
+
         </div>
       </div>
 
@@ -151,12 +196,37 @@ export default function SignUp() {
           </div>
 
           <label className="terms-box">
-            <input type="checkbox" /> I accept the Terms & Conditions
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(e) => {
+                setAcceptedTerms(e.target.checked);
+                setTermsError("");
+              }}
+            />
+            I accept the Terms & Conditions
           </label>
+
+          {termsError && <p style={{ color: "red", marginTop: "4px" }}>{termsError}</p>}
+
+
 
           {error && <p style={{ color: "red", marginTop: "5px" }}>{error}</p>}
 
-          <button className="btn-login">Sign Up</button>
+          <button className="btn-login" /*disabled={!acceptedTerms}*/>
+            Sign Up
+          </button>
+
+          {/* Error message (like login page) */}
+          {error && (
+            <p style={{ color: "red", marginTop: "10px", fontSize: "0.9rem" }}>
+              {error}
+            </p>
+          )}
+
+
+
+
 
           <p className="or-text">Or sign up using</p>
 
@@ -165,6 +235,8 @@ export default function SignUp() {
             <img src="facebook.png" alt="Facebook" className="social-icon" />
             <img src="twitter.png" alt="Twitter" className="social-icon" />
           </div>
+
+
         </form>
       </div>
     </div>

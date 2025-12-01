@@ -2,146 +2,198 @@ import React, { useState, useRef, useEffect } from 'react';
 import './ProfilePage.css';
 import { useNavigate } from "react-router-dom";
 
-
-
-
-const API = "http://localhost:8000"; // your backend URL
+const API = "http://localhost:8000";
 
 const MENU = [
   'My Profile',
   'My Appointments',
-  'settings',
+  'Settings',
   'Help Center',
   'Logout',
 ];
 
 export default function ProfilePage() {
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(null);
 
   const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     birthday: '',
     phone: '',
     address: '',
-    city: ''
+    city: '',
+    email: ''
   });
 
   const [profileSrc, setProfileSrc] = useState('/defaultProfile.png');
   const fileInputRef = useRef(null);
 
-  // ---------------------------------------
-  //  FETCH USER PROFILE FROM /me
-  // ---------------------------------------
-  useEffect(() => {
-    async function loadProfile() {
-      try {
-        const token = localStorage.getItem("token");
+  // -----------------------------
+  // LOAD PROFILE (/me)
+  // -----------------------------
+useEffect(() => {
+  async function loadProfile() {
+    const token = localStorage.getItem("accessToken");
+    console.log("Token from localStorage:", token);
+    if (!token) return;
 
-        const res = await fetch(`${API}/me`, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-
-        const data = await res.json();
-        if (!data.user) return;
-
-        const u = data.user;
-
-        // fill form
-        setForm({
-          firstName: u.name?.split(" ")[0] || "",
-          lastName: u.name?.split(" ")[1] || "",
-          birthday: u.birth_date || "",
-          phone: u.phone || "",
-          address: u.address || "",
-          city: u.city || ""
-        });
-
-        // set profile picture
-        if (u.profile_picture) {
-          setProfileSrc(`${API}/uploads/${u.profile_picture}`);
+    try {
+      const res = await fetch(`${API}/me`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
         }
-      } catch (err) {
-        console.error(err);
+      });
+
+      console.log("/me response status:", res.status);
+      const data = await res.json();
+      console.log("/me response data:", data);
+
+      if (!data.user) return;
+
+      const u = data.user;
+      setForm({
+        name: u.name || "",
+        birthday: u.birth_date || "",
+        phone: u.phone_number || "", // <-- fix mapping
+        address: u.address || "",
+        city: u.city || "",
+        email: u.email || ""
+      });
+
+      if (u.profile_picture) {
+        setProfileSrc(u.profile_picture.startsWith('http') ? u.profile_picture : `${API}${u.profile_picture}`);
       }
+
+    } catch (err) {
+      console.error("Error loading profile:", err);
     }
-
-    loadProfile();
-  }, []);
-
-  // ---------------------------------------
-  //  FORM HANDLING
-  // ---------------------------------------
-
-
-function handleMenuClick(i) {
-
-  setActiveIndex(i);
-
-  if (i === 0) navigate("/profile");
-  if (i === 1) navigate("/appointments");
-  if (i === 2) navigate("/settings");
-  if (i === 3) navigate("/help");
-  if (i === 4) {
-    localStorage.removeItem("token");
-    navigate("/login");
   }
-}
+
+  loadProfile();
+}, []);
 
 
+  // -----------------------------
+  // MENU NAVIGATION
+  // -----------------------------
+  function handleMenuClick(i) {
+    setActiveIndex(i);
+    if (i === 0) navigate("/profile");
+    if (i === 1) navigate("/appointments");
+    if (i === 2) navigate("/settings");
+    if (i === 3) navigate("/help");
+    if (i === 4) {
+      localStorage.removeItem("accessToken");
+      navigate("/");
+    }
+  }
+
+  // -----------------------------
+  // FORM HANDLING
+  // -----------------------------
   function handleChange(e) {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   }
 
   function onReset() {
-    setForm({ firstName: '', lastName: '', birthday: '', phone: '', address: '', city: '' });
+    setForm({
+      name: '',
+      birthday: '',
+      phone: '',
+      address: '',
+      city: '',
+      email: ''
+    });
   }
 
-  function onSave(e) {
-    e.preventDefault();
-    alert("Saving profile data is not implemented yet (only front-end)");
-  }
+ async function onSave(e) {
+   e.preventDefault();
+   const token = localStorage.getItem("accessToken");
+   if (!token) return alert("No token found!");
 
-  // ---------------------------------------
-  //  PROFILE PICTURE UPLOAD
-  // ---------------------------------------
+   const formData = new FormData();
+   formData.append("name", form.name);
+   formData.append("email", form.email);
+   formData.append("phone_number", form.phone);
+   formData.append("address", form.address);
+   formData.append("city", form.city);
+
+   if (fileInputRef.current?.files[0]) {
+     formData.append("profile_picture", fileInputRef.current.files[0]);
+   }
+
+   try {
+     const res = await fetch(`${API}/me/update`, {
+       method: "PUT",
+       headers: {
+         "Authorization": `Bearer ${token}`
+       },
+       body: formData
+     });
+
+     const data = await res.json();
+     if (res.ok) {
+       alert("Profile updated successfully!");
+       if (data.user.profile_picture) {
+         setProfileSrc(data.user.profile_picture.startsWith('http') ? data.user.profile_picture : `${API}${data.user.profile_picture}`);
+       }
+     } else {
+       alert(data.message || "Error updating profile");
+     }
+   } catch (err) {
+     console.error("Error updating profile:", err);
+     alert("Server error while updating profile");
+   }
+ }
+
+ // Handle profile picture change instantly in preview
+
+
+
+  // -----------------------------
+  // PROFILE PICTURE
+  // -----------------------------
   function onChangeProfileClick() {
     fileInputRef.current?.click();
   }
+
 
   async function onProfileSelected(e) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
 
     const formData = new FormData();
     formData.append("image", file);
-    formData.append("email", form.email); // or user ID if needed
 
     try {
       const res = await fetch(`${API}/change-profile-picture`, {
         method: "PUT",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${token}` // Do NOT set Content-Type here
         },
         body: formData
       });
 
+      console.log("/change-profile-picture response status:", res.status);
       const data = await res.json();
-      if (data.file) {
-        setProfileSrc(`${API}/uploads/${data.file}`);
+      console.log("/change-profile-picture response data:", data);
+
+      if (data.imageUrl) {
+        setProfileSrc(data.imageUrl); // full URL from backend
       }
 
     } catch (err) {
-      console.error("Upload error:", err);
+      console.error("Profile upload error:", err);
     }
   }
+
+
 
   return (
     <div className="pp-container">
@@ -153,9 +205,9 @@ function handleMenuClick(i) {
         </div>
         <ul className="nav-links">
           <li><a href="/home">Home</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Profile</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/about-us">About Us</a></li>
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
 
@@ -164,7 +216,6 @@ function handleMenuClick(i) {
           {MENU.map((label, i) => {
             const active = i === activeIndex;
             const hovering = i === hoverIndex;
-
             return (
               <div
                 key={label}
@@ -184,7 +235,6 @@ function handleMenuClick(i) {
                   }
                   alt=""
                 />
-
                 <span className="pp-menu-text">{label}</span>
               </div>
             );
@@ -192,13 +242,12 @@ function handleMenuClick(i) {
         </aside>
 
         <main className="pp-main">
-          <h1 className="pp-title">Edit profile</h1>
+          <h1 className="pp-title">Edit Profile</h1>
 
           <div className="pp-profile-wrap">
             <div className="pp-avatar-holder">
               <img className="pp-avatar" src={profileSrc} alt="profile" />
             </div>
-
             <button className="pp-change-btn" onClick={onChangeProfileClick}>Change</button>
             <input
               ref={fileInputRef}
@@ -210,14 +259,10 @@ function handleMenuClick(i) {
           </div>
 
           <form className="pp-form" onSubmit={onSave}>
-            <label className="pp-field">
-              <div className="pp-label">First name</div>
-              <input name="firstName" value={form.firstName} onChange={handleChange} />
-            </label>
 
             <label className="pp-field">
-              <div className="pp-label">Last name</div>
-              <input name="lastName" value={form.lastName} onChange={handleChange} />
+              <div className="pp-label">Name</div>
+              <input name="name" value={form.name} onChange={handleChange} />
             </label>
 
             <label className="pp-field">
@@ -226,7 +271,7 @@ function handleMenuClick(i) {
             </label>
 
             <label className="pp-field">
-              <div className="pp-label">Phone number</div>
+              <div className="pp-label">Phone</div>
               <input name="phone" value={form.phone} onChange={handleChange} />
             </label>
 
@@ -245,6 +290,7 @@ function handleMenuClick(i) {
               <button type="submit" className="pp-save">Save</button>
             </div>
           </form>
+
         </main>
       </div>
     </div>

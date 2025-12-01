@@ -8,10 +8,10 @@ function ErrorSignin() {
   return (
     <div className="error-signin-container">
       <div className="error-signin-card">
-        <h1>Veuillez vous connecter</h1>
-        <p>Vous devez être connecté pour accéder à votre profil.</p>
+        <h1>Please Sign In</h1>
+        <p>You should be signed in in order to view this page.</p>
         <button onClick={() => navigate("/")} className="signin-btn">
-          Aller à la page de connexion
+          Go To Sign In Page
         </button>
       </div>
     </div>

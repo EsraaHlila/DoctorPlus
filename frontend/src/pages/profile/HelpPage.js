@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./SettingsPage.css";
+import { useNavigate } from "react-router-dom";
 
 const MENU = [
   "My Profile",
@@ -10,11 +11,27 @@ const MENU = [
 ];
 
 export default function SettingsPage() {
+const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(3);
   const [hoverIndex, setHoverIndex] = useState(null);
 
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [showHelpPopup, setShowHelpPopup] = useState(false);
+  function handleMenuClick(i) {
+
+      setActiveIndex(i);
+
+      if (i === 0) navigate("/profile");
+      if (i === 1) navigate("/appointments");
+      if (i === 2) navigate("/settings");
+      if (i === 3) navigate("/help");
+      if (i === 4) {
+        localStorage.removeItem("accessToken");
+        navigate("/");
+      }
+    }
+
+
 
   return (
     <div className="pp-container">
@@ -27,7 +44,7 @@ export default function SettingsPage() {
 
         <ul className="nav-links">
           <li><a href="/home">Home</a></li>
-          <li><a href="/about">About Us</a></li>
+          <li><a href="about-us">About Us</a></li>
           <li><a href="/profile">Profile</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
@@ -43,7 +60,7 @@ export default function SettingsPage() {
             return (
               <div
                 key={label}
-                onClick={() => setActiveIndex(i)}
+                onClick={() => handleMenuClick(i)}
                 onMouseEnter={() => setHoverIndex(i)}
                 onMouseLeave={() => setHoverIndex(null)}
                 className={`pp-menu-item ${active ? "active" : ""} ${!active && hover ? "hover" : ""}`}

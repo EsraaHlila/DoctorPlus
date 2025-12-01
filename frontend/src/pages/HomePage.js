@@ -2,8 +2,10 @@ import React from "react";
 import "./HomePage.css";
 import doctorBg from "../doctor-bg.jpg";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+const navigate = useNavigate();
   return (
     <div className="homepage">
       <nav className="navbar">
@@ -13,9 +15,9 @@ function HomePage() {
         </div>
         <ul className="nav-links">
           <li><a href="#">Home</a></li>
-          <li><a href="#">About Us</a></li>
+          <li><a href="/about-us">About Us</a></li>
           <li><a href="/profile">Profile</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
 
@@ -30,10 +32,22 @@ function HomePage() {
             <p>
               A Healthier Tomorrow Starts Today — Schedule Your Appointment!
             </p>
-            <div className="buttons">
-              <button className="btn primary">Book an Appointment</button>
-              <button className="btn secondary">Call Now</button>
-            </div>
+
+                <div className="buttons">
+                  <button
+                    className="btn primary"
+                    onClick={() => navigate("/appointments")}
+                  >
+                    Book an Appointment
+                  </button>
+                  <button
+                  className="btn secondary"
+                  onClick={() => navigate("/about-us")}
+                  >
+                  Call Now
+                  </button>
+                </div>
+
           </div>
         </div>
       </section>

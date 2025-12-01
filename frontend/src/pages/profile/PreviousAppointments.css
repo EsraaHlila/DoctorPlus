@@ -1,0 +1,140 @@
+.homepage {
+  font-family: "Poppins", sans-serif;
+  background-color: #ffffff !important;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background-color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0066cc;
+}
+
+.logo .plus {
+  color: #00b4ff;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.back-arrow {
+  font-size: 25px;
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 20px 0 0 40px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 35px;
+}
+
+.back-arrow:hover {
+  transform: scale(1.15);
+}
+
+.previous-appointments-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 80px auto 40px auto;
+  text-align: center;
+}
+
+.previous-title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: black;
+}
+
+.appointment-card {
+  width: 100%;
+  display: flex;
+  border-radius: 50px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+
+
+
+
+
+.appointment-left {
+  width: 65%;
+  background-color: #d7d7d7;
+  padding: 25px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  color: black;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.appointment-right {
+  width: 35%;
+  background-color: #0066cc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 0;
+}
+
+.review-btn {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+}
+
+.review-btn:hover {
+  transform: scale(1.05);
+}
+
+.star-rating {
+  display: flex;
+  gap: 6px;
+  margin-top: -7px;
+}
+
+.star {
+  font-size: 24px;
+  cursor: pointer;
+  color: rgb(255, 255, 2);
+  transition: transform 0.2s ease;
+}
+
+.star:hover {
+  transform: scale(1.25);
+}
+
+/* Fix for Upcoming Appointments ONLY */
+.upcoming-card {
+  border-radius: 50px !important;
+  overflow: visible !important;
+  background-color: #d7d7d7; /* same style as appointment-left */
+  padding: 25px 20px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}

@@ -1,0 +1,160 @@
+
+.homepage {
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  background-color: #f5f7fa;
+}
+
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background-color: #ffffff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0066cc;
+}
+
+.logo .plus {
+  color: #00b4ff;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+.contact-page {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: 40px 20px;
+  padding-top: 65px;
+
+}
+
+
+.contact-subtitle {
+  font-size: 22px;
+  margin-top: 10px;
+  opacity: 0.9;
+  color: #636363;
+}
+
+.contact-grid {
+  margin-top: 35px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 35px 30px;
+  justify-items: center;
+}
+
+
+.single-box {
+  grid-column: 2 / 3;
+}
+
+
+.contact-box {
+  cursor: pointer;
+  width: 260px;
+  padding: 20px 10px;
+  transition: 0.2s;
+}
+
+.contact-box:hover {
+  transform: scale(1.07);
+}
+
+.icon-box {
+  width: 75px;
+  height: 75px;
+  background-color: transparent;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.icon-box img {
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
+  display: block;
+}
+
+.box-title {
+  color: #0070ba;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.box-desc {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-box {
+  background: white;
+  padding: 30px;
+  width: 320px;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
+}
+
+.phone-btn {
+  background: #00b81f;
+  color: white;
+  border: none;
+  border-radius: 80px;
+  font-size: 17px;
+  cursor: pointer;
+  transition: 0.2s;
+  width: fit-content;
+  padding: 10px 20px;
+  margin: 10px auto;
+  display: block;
+}
+
+
+
+.close-btn {
+  margin-top: 15px;
+  padding: 12px;
+  width: 100%;
+  background: #0066cc;
+  border: none;
+  border-radius: 90px;
+  cursor: pointer;
+  color: white;
+}
+.close-btn:hover {
+  background: #00b4ff;
+}
